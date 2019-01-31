@@ -13,3 +13,11 @@
 
 <script src="scripts/barraEndereco.js"></script>
 <script src="scripts/janelaPrincipal.js"></script>
+
+<script>
+    const currentVersion = localStorage.getItem("version")
+    const version =  (currentVersion !== null && currentVersion !== undefined) ? parseInt(currentVersion) : 0
+
+    alert("Version: " +  version)
+    localStorage.setItem("version", version + 1)
+</script>
