@@ -10,27 +10,61 @@ function createWindow () {
     mainWindow = new BrowserWindow({
         width: screenSize.width
         ,height: screenSize.height
-        ,nodeIntegration: "iframe"
         ,webPreferences: {
             webSecurity: false
         }
+        ,sandbox: true
     })
 
     // e carrega index.html do app.
     mainWindow.loadFile('browser/index.html')
 
-    mainWindow.webContents.session.webRequest.onHeadersReceived({}, (d, c) => {
-        if(d.responseHeaders['x-frame-options'] || d.responseHeaders['X-Frame-Options']){
-            delete d.responseHeaders['x-frame-options'];
-            delete d.responseHeaders['X-Frame-Options'];
-            delete d.responseHeaders['access-control-allow-origin'];
-            delete d.responseHeaders['Access-Control-Allow-Origin'];
+    const session = mainWindow.webContents.session
+
+    session.clearStorageData(function() {
+        console.log("Before opening: Cleared Caches")
+    })
+
+    session.webRequest.onHeadersReceived({}, (details, callback) => {        
+        const originalCSPHeader = details.responseHeaders['Content-Security-Policy']
+
+        const bannedPolicyNames = ['frame-ancestors', 'frame-src', 'default-src']
+        const isBannedPolicy = (policyString = '') => bannedPolicyNames
+            .map(bannedPolicyName => new RegExp(`^${bannedPolicyName.toLowerCase()}`).test(policyString.trim().toLowerCase()))
+            .reduce((matchedPrevious, doesMatchCurrentPolicy, x) => (matchedPrevious || doesMatchCurrentPolicy), false)
+        
+        if(originalCSPHeader) {
+            console.log("Original:", JSON.stringify(originalCSPHeader, null, 4))
+
+            const newCSPHeader = details.responseHeaders['Content-Security-Policy']
+                .map(policy => policy.split(";"))
+                .filter(Boolean)
+                .map(props => props.filter(prop => (console.log(prop), !isBannedPolicy(prop))))
+                .map(props => props.join(";"))
+            
+            console.log("Filtered:", JSON.stringify(newCSPHeader, null, 4))
+
+            details.responseHeaders['Content-Security-Policy'] = newCSPHeader
         }
-        c({cancel: false, responseHeaders: d.responseHeaders});
-    }   );
+
+        if(details.responseHeaders['x-frame-options'] || details.responseHeaders['X-Frame-Options']){
+            delete details.responseHeaders['x-frame-options'];
+            delete details.responseHeaders['X-Frame-Options'];
+            delete details.responseHeaders['access-control-allow-origin'];
+            delete details.responseHeaders['Access-Control-Allow-Origin'];
+        }
+        callback({cancel: false, responseHeaders: details.responseHeaders});
+    });
+
+    mainWindow.on('close', function() {
+        const session = mainWindow.webContents.session
+        session.clearStorageData(function() {
+            console.log("Before exit: Cleared Caches")
+        })
+    })
 
     mainWindow.on('closed', function() {
-        mainWindow.removeAllListeners();   
+        mainWindow.removeAllListeners()
         mainWindow = null;
     });
 }
