@@ -39,13 +39,13 @@ function init () {
         ))))
     )
 
-    // mainWindow.on('new-window', (event, url) => {
-    //     event.preventDefault()
-    //     const win = createCakeBrowserWindow
-    //     win.once('ready-to-show', () => win.show())
-    //     win.loadURL(url)
-    //     event.newGuest = win
-    // })
+    mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
+        console.log("New window")
+        event.preventDefault()
+        const win = createCakeBrowserWindow()
+        win.once('ready-to-show', () => win.show())
+        event.newGuest = win
+    })
 
     mainWindow.on('closed', function() {
         mainWindow.removeAllListeners()
