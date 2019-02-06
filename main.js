@@ -1,51 +1,30 @@
 const { WithDisabledContentSecurityPolicy } = require('./session/WithDisabledContentSecurityPolicy')
 const { WithDisabledResponseHeaders } = require('./session/WithDisabledResponseHeaders')
-const { WithMultipleResponseInterceptors } = require('./session/WithMultipleResponseInterceptors')
+const { InterceptableResponseSession } = require('./session/InterceptableResponseSession')
 const { AmnesicSession } = require('./session/AmnesicSession')
 
-const {app, BrowserWindow} = require('electron')
+const { CakeBrowserWindow } = require('./window/CakeBrowserWindow')
 
-function createGenericBrowserWindow () {
-    const {screen} = require('electron')
-    const screenSize = screen.getPrimaryDisplay().size
-    
-    return new BrowserWindow({
-        width: screenSize.width
-        ,height: screenSize.height
-        ,webPreferences: {
-            webSecurity: false
-        }
-        ,sandbox: true
+const {app} = require('electron')
+
+app.on('will-finish-launching', () => {
+    app.on('open-file', event => {
+        console.log(JSON.stringify(event, null, 2))
     })
-}
+})
 
-function createCakeBrowserWindow() {
-    const cakeBrowserWindow = createGenericBrowserWindow()
-    cakeBrowserWindow.loadFile('browser/index.html')
-
-    return cakeBrowserWindow
-}
-
-function init () {    
+async function init () {    
     
-    let mainWindow =  createCakeBrowserWindow()
+    let mainWindow = await CakeBrowserWindow()
 
     const session = (
         AmnesicSession(
-        WithDisabledResponseHeaders (['Access-Control-Allow-Origin', 'X-Frame-Options'],
-        WithDisabledContentSecurityPolicy(
-        WithMultipleResponseInterceptors(
+        WithDisabledResponseHeaders(['Access-Control-Allow-Origin', 'X-Frame-Options'],
+        WithDisabledContentSecurityPolicy(['frame-ancestors', 'frame-src', 'default-src'],
+        InterceptableResponseSession(
             mainWindow.webContents.session
         ))))
     )
-
-    mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
-        console.log("New window")
-        event.preventDefault()
-        const win = createCakeBrowserWindow()
-        win.once('ready-to-show', () => win.show())
-        event.newGuest = win
-    })
 
     mainWindow.on('closed', function() {
         mainWindow.removeAllListeners()

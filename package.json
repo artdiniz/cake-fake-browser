@@ -5,5 +5,13 @@
     },
     "devDependencies": {
         "electron": "^3.0.0"
+    },
+    "dependencies": {
+        "cheerio": "^1.0.0-rc.2",
+        "gulp": "^4.0.0",
+        "gulp-debug": "^4.0.0",
+        "gulp-filter": "^5.1.0",
+        "memoizee": "^0.4.14",
+        "tmp": "0.0.33"
     }
 }

@@ -1,6 +1,5 @@
-function WithDisabledContentSecurityPolicy(session) {
+function WithDisabledContentSecurityPolicy(bannedPolicyNames, session) {
 
-    const bannedPolicyNames = ['frame-ancestors', 'frame-src', 'default-src']
     function isBannedPolicy(policyString = '') {
         return bannedPolicyNames
             .map(bannedPolicyName => new RegExp(`^${bannedPolicyName.toLowerCase()}`).test(policyString.trim().toLowerCase()))

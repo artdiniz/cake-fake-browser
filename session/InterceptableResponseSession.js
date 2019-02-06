@@ -1,4 +1,12 @@
-function WithResponseInterceptors(session) {
+/*
+    At the time, Electron sessions can handle a single `.webRequest.onHeadersReceived` listener,
+    which makes complex response interception behaviors not composable.
+
+    This function enables responce interception composition by decorating a electron session 
+    with a `addResponseInterceptor` method, allowing multiple response handlers.
+*/
+
+function InterceptableResponseSession(session) {
     const responseInterceptorHandlers = []
 
     session.webRequest.onHeadersReceived({}, async (responseDetails, callback) => {
@@ -41,4 +49,4 @@ function WithResponseInterceptors(session) {
     }))
 }
 
-exports.WithMultipleResponseInterceptors = WithResponseInterceptors
+exports.InterceptableResponseSession = InterceptableResponseSession

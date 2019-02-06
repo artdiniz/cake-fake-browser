@@ -9,15 +9,7 @@
     <input type="text" id="barraEndereco">
 </header>
 
-<iframe src="blank.html" id="janelaPrincipal" sandbox="allow-scripts allow-same-origin allow-popups allow-pointer-lock allow-forms"></iframe>
+<iframe src="blank.html" id="janelaPrincipal"></iframe>
 
 <script src="scripts/barraEndereco.js"></script>
 <script src="scripts/janelaPrincipal.js"></script>
-
-<script>
-    const currentVersion = localStorage.getItem("version")
-    const version =  (currentVersion !== null && currentVersion !== undefined) ? parseInt(currentVersion) : 0
-
-    alert("Version: " +  version)
-    localStorage.setItem("version", version + 1)
-</script>
