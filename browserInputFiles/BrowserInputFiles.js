@@ -6,6 +6,9 @@ const memoize = require("memoizee")
 const glob = require("glob")
 
 const cheerio = require('cheerio')
+
+const expandTilde = require('expand-tilde')
+
 const gulpDebug = require('gulp-debug')
 
 function createCakeIndexFileBuilder({indexFileDirPath} = {}) {
@@ -70,7 +73,8 @@ async function createTmpCakeDirFrom (srcDir) {
 }
 
 async function BrowserInputFilesIn(srcDir) {
-    const tmpCakeDir = await createTmpCakeDirFrom(srcDir)
+
+    const tmpCakeDir = await createTmpCakeDirFrom(expandTilde(srcDir))
     
     const cakeIndexFileBuilder = createCakeIndexFileBuilder({indexFileDirPath: tmpCakeDir.getPath()})
 
