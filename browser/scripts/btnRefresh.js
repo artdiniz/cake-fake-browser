@@ -1,3 +1,0 @@
-btnRefresh.onclick = function(){
-    
-}

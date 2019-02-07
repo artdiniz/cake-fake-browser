@@ -1,11 +1,9 @@
 const {GenericBrowserWindow} = require('./GenericBrowserWindow')
 
-const { BrowserInputFiles } = require('../browserInputFiles/BrowserInputFiles')
-
-async function createCakeBrowserWindow({openURL} = {}) {
+function createCakeBrowserWindow({cakeFiles, openURL} = {}) {
     const cakeBrowserWindow = GenericBrowserWindow()
 
-    const indexFilePath = await BrowserInputFiles.getIndex({iframeSRC: openURL})
+    const indexFilePath = cakeFiles.getIndex({openURL})
 
     cakeBrowserWindow.loadFile(indexFilePath)
     
@@ -14,7 +12,7 @@ async function createCakeBrowserWindow({openURL} = {}) {
     cakeBrowserWindow.webContents.on('new-window', async (event, url, frameName, disposition, options, additionalFeatures) => {
         event.preventDefault()
         console.log('Opening in: ' + url)
-        const win = await createCakeBrowserWindow({openURL: url})
+        const win = await createCakeBrowserWindow({cakeFiles, openURL: url})
         event.newGuest = win
     })
 

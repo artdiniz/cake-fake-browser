@@ -11,6 +11,7 @@ function createGenericBrowserWindow () {
             webSecurity: false
         }
         ,sandbox: true
+        ,show: false
     })
 }
 

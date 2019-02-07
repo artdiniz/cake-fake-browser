@@ -3,9 +3,10 @@ const { WithDisabledResponseHeaders } = require('./session/WithDisabledResponseH
 const { InterceptableResponseSession } = require('./session/InterceptableResponseSession')
 const { AmnesicSession } = require('./session/AmnesicSession')
 
+const { BrowserInputFiles } = require('./browserInputFiles/BrowserInputFiles');
 const { CakeBrowserWindow } = require('./window/CakeBrowserWindow')
 
-const {app} = require('electron')
+const {app, dialog} = require('electron')
 
 app.on('will-finish-launching', () => {
     app.on('open-file', event => {
@@ -13,9 +14,21 @@ app.on('will-finish-launching', () => {
     })
 })
 
-async function init () {    
+async function init () {
     
-    let mainWindow = await CakeBrowserWindow()
+    const srcDir = await new Promise((resolve, reject) => {
+        dialog.showOpenDialog({
+            properties: ['openDirectory']
+        }, function (folderPath) {
+            if (folderPath !== undefined) {
+                resolve(folderPath[0])
+            }
+        })
+    })
+    
+    let cakeFiles = await BrowserInputFiles.in(srcDir)
+
+    let mainWindow = CakeBrowserWindow({cakeFiles})
 
     const session = (
         AmnesicSession(
