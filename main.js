@@ -16,15 +16,9 @@ app.on('will-finish-launching', () => {
 
 async function init () {
     
-    const srcDir = await new Promise((resolve, reject) => {
-        dialog.showOpenDialog({
-            properties: ['openDirectory']
-        }, function (folderPath) {
-            if (folderPath !== undefined) {
-                resolve(folderPath[0])
-            }
-        })
-    })
+    const srcDir = dialog.showOpenDialog({
+        properties: ['openDirectory']
+    })[0]
     
     let cakeFiles = await BrowserInputFiles.in(srcDir)
 
