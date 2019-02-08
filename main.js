@@ -1,12 +1,12 @@
-const { WithDisabledContentSecurityPolicy } = require('./session/WithDisabledContentSecurityPolicy')
-const { WithDisabledResponseHeaders } = require('./session/WithDisabledResponseHeaders')
-const { InterceptableResponseSession } = require('./session/InterceptableResponseSession')
-const { AmnesicSession } = require('./session/AmnesicSession')
+import { WithDisabledContentSecurityPolicy } from './session/WithDisabledContentSecurityPolicy'
+import { WithDisabledResponseHeaders } from './session/WithDisabledResponseHeaders'
+import { InterceptableResponseSession } from './session/InterceptableResponseSession'
+import { AmnesicSession } from './session/AmnesicSession'
 
-const { CakeBrowserInputFilesSetup } = require('./cakeBrowserInputFiles/CakeBrowserInputFilesSetup')
-const { CakeBrowserWindow } = require('./window/CakeBrowserWindow')
+import { CakeBrowserInputFilesSetup } from './cakeBrowserInputFiles/CakeBrowserInputFilesSetup'
+import { CakeBrowserWindow } from './window/CakeBrowserWindow'
 
-const {app, dialog} = require('electron')
+import {app, dialog} from 'electron'
 
 app.on('will-finish-launching', () => {
     app.on('open-file', event => {

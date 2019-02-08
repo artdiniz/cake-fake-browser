@@ -1,4 +1,4 @@
-function WithDisabledContentSecurityPolicy(bannedPolicyNames, session) {
+export function WithDisabledContentSecurityPolicy(bannedPolicyNames, session) {
 
     function isBannedPolicy(policyString = '') {
         return bannedPolicyNames
@@ -26,5 +26,3 @@ function WithDisabledContentSecurityPolicy(bannedPolicyNames, session) {
 
     return session
 }
-
-exports.WithDisabledContentSecurityPolicy = WithDisabledContentSecurityPolicy

@@ -6,7 +6,7 @@
     with a `addResponseInterceptor` method, allowing multiple response handlers.
 */
 
-function InterceptableResponseSession(session) {
+export function InterceptableResponseSession(session) {
     const responseInterceptorHandlers = []
 
     session.webRequest.onHeadersReceived({}, async (responseDetails, callback) => {
@@ -48,5 +48,3 @@ function InterceptableResponseSession(session) {
         }
     }))
 }
-
-exports.InterceptableResponseSession = InterceptableResponseSession

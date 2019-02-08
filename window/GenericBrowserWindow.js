@@ -15,4 +15,4 @@ function createGenericBrowserWindow () {
     })
 }
 
-exports.GenericBrowserWindow = createGenericBrowserWindow
+export const GenericBrowserWindow = createGenericBrowserWindow

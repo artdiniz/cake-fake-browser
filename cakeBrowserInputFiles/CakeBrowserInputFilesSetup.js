@@ -1,15 +1,15 @@
-const fs = require('fs')
-const path = require('path')
-const tmp = require('tmp')
-const gulp = require('gulp')
-const memoize = require("memoizee")
-const glob = require("glob")
+import fs from 'fs'
+import path from 'path'
+import tmp from 'tmp'
+import gulp from 'gulp'
+import memoize from "memoizee"
+import glob from "glob"
 
-const cheerio = require('cheerio')
+import cheerio from 'cheerio'
 
-const expandTilde = require('expand-tilde')
+import expandTilde from 'expand-tilde'
 
-const gulpDebug = require('gulp-debug')
+import gulpDebug from 'gulp-debug'
 
 function createCakeIndexFileBuilder({indexFileDirPath} = {}) {
     
@@ -95,8 +95,6 @@ async function createAndSetupFileIn(srcDir) {
     }
 }
 
-const CakeBrowserInputFilesSetup = {
+export const CakeBrowserInputFilesSetup = {
     in: createAndSetupFileIn
 }
-
-exports.CakeBrowserInputFilesSetup = CakeBrowserInputFilesSetup

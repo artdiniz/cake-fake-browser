@@ -10,7 +10,7 @@ function AccessedOriginsRecorder(session) {
     }
 }
 
-exports.AmnesicSession = function AmnesicSession(session) {
+export function AmnesicSession(session) {
 
     const originsRecorder = AccessedOriginsRecorder(session)
     

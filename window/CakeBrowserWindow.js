@@ -1,4 +1,4 @@
-const {GenericBrowserWindow} = require('./GenericBrowserWindow')
+import {GenericBrowserWindow} from './GenericBrowserWindow'
 
 function createCakeBrowserWindow(getIndexFilePath) {
     const cakeBrowserWindow = GenericBrowserWindow()
@@ -21,4 +21,4 @@ function createCakeBrowserWindow(getIndexFilePath) {
 }
 
 
-exports.CakeBrowserWindow = ({getIndexFilePathFn}) => createCakeBrowserWindow(getIndexFilePathFn)
+export const CakeBrowserWindow = ({getIndexFilePathFn}) => createCakeBrowserWindow(getIndexFilePathFn)

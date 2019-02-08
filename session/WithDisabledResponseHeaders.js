@@ -1,4 +1,4 @@
-function WithDisabledResponseHeaders(disabledHeadersNames = [], session) {
+export function WithDisabledResponseHeaders(disabledHeadersNames = [], session) {
     function isSameHeader(headerNameA, headerNameB) {
         return headerNameA.toLowerCase() == headerNameB.toLowerCase()
     }
@@ -14,5 +14,3 @@ function WithDisabledResponseHeaders(disabledHeadersNames = [], session) {
 
     return session
 }
-
-exports.WithDisabledResponseHeaders = WithDisabledResponseHeaders
