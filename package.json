@@ -1,6 +1,23 @@
 {
-    "displayName": "Cake",
+    "name": "@acaelum/cake",
+    "description": "Fake browser wrapper that will power JS-12 course at Caelum",
+    "keywords": [
+        "caelum",
+        "curso",
+        "js12"
+    ],
+    "author": {
+        "name": "Artur Diniz Adam",
+        "url": "https://github.com/artdiniz"
+    },
+    "version": "0.0.0",
+    "publishConfig": {
+        "access": "public"
+    },
     "main": "main.js",
+    "bin": {
+        "cake": "./dist/bin"
+    },
     "scripts": {
         "start": "electron ./index"
     },
@@ -15,13 +32,8 @@
         "gulp": "^4.0.0",
         "gulp-debug": "^4.0.0",
         "gulp-filter": "^5.1.0",
+        "lodash": "^4.17.11",
         "memoizee": "^0.4.14",
         "tmp": "0.0.33"
-    },
-    "build": {
-        "appId": "br.com.caelum.cake.browser",
-        "mac": {
-            "category": "public.app-category.developer-tools"
-        }
     }
 }
