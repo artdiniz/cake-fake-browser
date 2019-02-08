@@ -3,7 +3,7 @@ const { WithDisabledResponseHeaders } = require('./session/WithDisabledResponseH
 const { InterceptableResponseSession } = require('./session/InterceptableResponseSession')
 const { AmnesicSession } = require('./session/AmnesicSession')
 
-const { BrowserInputFiles } = require('./browserInputFiles/BrowserInputFiles');
+const { CakeBrowserInputFilesSetup } = require('./cakeBrowserInputFiles/CakeBrowserInputFilesSetup')
 const { CakeBrowserWindow } = require('./window/CakeBrowserWindow')
 
 const {app, dialog} = require('electron')
@@ -20,9 +20,11 @@ async function init () {
         properties: ['openDirectory']
     })[0]
     
-    let cakeFiles = await BrowserInputFiles.in(srcDir)
+    let cakeFiles = await CakeBrowserInputFilesSetup.in(srcDir)
 
-    let mainWindow = CakeBrowserWindow({cakeFiles})
+    let mainWindow = CakeBrowserWindow({
+        getIndexFilePathFn: cakeFiles.getIndexPath
+    })
 
     const session = (
         AmnesicSession(

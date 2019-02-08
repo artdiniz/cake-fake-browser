@@ -72,13 +72,13 @@ async function createTmpCakeDirFrom (srcDir) {
     }
 }
 
-async function BrowserInputFilesIn(srcDir) {
+async function createAndSetupFileIn(srcDir) {
 
     const tmpCakeDir = await createTmpCakeDirFrom(expandTilde(srcDir))
     
     const cakeIndexFileBuilder = createCakeIndexFileBuilder({indexFileDirPath: tmpCakeDir.getPath()})
 
-    function getIndex({openURL} = {}) {
+    function getIndexPath({withOpenURL: openURL} = {}) {
         let indexFile
 
         if(openURL !== undefined && openURL !== null) {
@@ -91,12 +91,12 @@ async function BrowserInputFilesIn(srcDir) {
     }
 
     return {
-        getIndex: getIndex
+        getIndexPath: getIndexPath
     }
 }
 
-const BrowserInputFiles = {
-    in: BrowserInputFilesIn
+const CakeBrowserInputFilesSetup = {
+    in: createAndSetupFileIn
 }
 
-exports.BrowserInputFiles = BrowserInputFiles
+exports.CakeBrowserInputFilesSetup = CakeBrowserInputFilesSetup
