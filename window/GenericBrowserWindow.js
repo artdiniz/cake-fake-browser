@@ -1,18 +1,23 @@
-const { BrowserWindow } = require('electron')
+import { BrowserWindow } from 'electron'
 
-function createGenericBrowserWindow () {
+import _merge from 'lodash/merge'
+
+function createGenericBrowserWindow (opts = {}) {
     const {screen} = require('electron')
     const screenSize = screen.getPrimaryDisplay().size
     
-    return new BrowserWindow({
-        width: screenSize.width
-        ,height: screenSize.height
-        ,webPreferences: {
-            webSecurity: false
+    return new BrowserWindow(_merge(
+        {
+            width: screenSize.width
+            ,height: screenSize.height
+            ,webPreferences: {
+                webSecurity: false
+            }
+            ,sandbox: true
+            ,show: false
         }
-        ,sandbox: true
-        ,show: false
-    })
+        , opts
+    ))
 }
 
 export const GenericBrowserWindow = createGenericBrowserWindow

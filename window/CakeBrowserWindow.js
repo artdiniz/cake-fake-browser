@@ -1,7 +1,7 @@
 import {GenericBrowserWindow} from './GenericBrowserWindow'
 
 function createCakeBrowserWindow(getIndexFilePath) {
-    const cakeBrowserWindow = GenericBrowserWindow()
+    const cakeBrowserWindow = GenericBrowserWindow({title: "Caelum Cake Browser"})
     
     const indexPath = getIndexFilePath()
 
