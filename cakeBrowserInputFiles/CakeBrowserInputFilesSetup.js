@@ -53,11 +53,13 @@ function createCakeIndexFileBuilder({indexFileDirPath} = {}) {
 async function createTmpCakeDirFrom (srcDir) {
     const tmpDir = await new Promise((resolve, reject) => {
         const tmpFolder = tmp.dirSync()
-        console.log('Tmp folder path: ' + tmpFolder.name)
+        console.log(`\nLoading files from: ${srcDir} \n`)
     
         gulp.src(path.join(srcDir, '**/*'))
+            .pipe(gulpDebug({title: "-> ", }))
             .pipe(gulp.dest(tmpFolder.name))
             .on('end', result => {
+                console.log(`\nMoved files to: ${tmpFolder.name} \n`)
                 resolve({
                     path: tmpFolder.name
                 })

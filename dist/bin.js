@@ -1,3 +1,10 @@
 #!/usr/bin/env node
 
-require('../index.js')
+const npm = require('npm')
+
+npm.load({}, (err) => {
+    if(err) throw err
+    npm.commands["run-script"](["start"], (err) => {
+        if(err) throw err
+    })
+})
