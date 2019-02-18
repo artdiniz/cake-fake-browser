@@ -36,8 +36,8 @@ async function init () {
     )
 
     mainWindow.on('closed', function() {
-        mainWindow.removeAllListeners()
         mainWindow = null;
+        cakeFiles.deleteAll()
     })
 
     let cleanedAllStorage = false

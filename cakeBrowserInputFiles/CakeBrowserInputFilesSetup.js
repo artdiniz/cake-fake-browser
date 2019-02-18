@@ -52,7 +52,7 @@ function createCakeIndexFileBuilder({indexFileDirPath} = {}) {
 
 async function createTmpCakeDirFrom (srcDir) {
     const tmpDir = await new Promise((resolve, reject) => {
-        const tmpFolder = tmp.dirSync()
+        const tmpFolder = tmp.dirSync({unsafeCleanup: true})
         console.log(`\nLoading files from: ${srcDir} \n`)
     
         gulp.src(path.join(srcDir, '**/*'))
@@ -62,6 +62,8 @@ async function createTmpCakeDirFrom (srcDir) {
                 console.log(`\nMoved files to: ${tmpFolder.name} \n`)
                 resolve({
                     path: tmpFolder.name
+                    ,remove: tmpFolder.removeCallback
+
                 })
             })
             .on('error', error => {
@@ -71,6 +73,7 @@ async function createTmpCakeDirFrom (srcDir) {
 
     return {
         getPath: () => tmpDir.path
+        ,remove: () => tmpDir.remove
     }
 }
 
@@ -92,8 +95,13 @@ async function createAndSetupFileIn(srcDir) {
         return indexFile.name
     }
 
+    function deleteAll() {
+        tmpCakeDir.remove()
+    }
+
     return {
         getIndexPath: getIndexPath
+        ,deleteAll: deleteAll 
     }
 }
 

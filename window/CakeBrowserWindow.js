@@ -8,6 +8,10 @@ function createCakeBrowserWindow(getIndexFilePath) {
     cakeBrowserWindow.loadFile(indexPath)
     
     cakeBrowserWindow.once('ready-to-show', () => cakeBrowserWindow.show())
+    
+    cakeBrowserWindow.on('closed', () => {
+        cakeBrowserWindow.removeAllListeners()
+    })
 
     cakeBrowserWindow.webContents.on('new-window', async (event, newWindowURL, frameName, disposition, options, additionalFeatures) => {
         event.preventDefault()
