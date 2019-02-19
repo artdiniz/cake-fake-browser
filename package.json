@@ -10,7 +10,7 @@
         "name": "Artur Diniz Adam",
         "url": "https://github.com/artdiniz"
     },
-    "version": "0.0.8",
+    "version": "0.0.9",
     "publishConfig": {
         "access": "public"
     },
