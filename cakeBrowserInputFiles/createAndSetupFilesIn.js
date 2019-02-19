@@ -77,7 +77,7 @@ async function createTmpCakeDirFrom (srcDir) {
     }
 }
 
-async function createAndSetupFileIn(srcDir) {
+export async function createAndSetupFilesIn(srcDir) {
 
     const tmpCakeDir = await createTmpCakeDirFrom(expandTilde(srcDir))
     
@@ -103,8 +103,4 @@ async function createAndSetupFileIn(srcDir) {
         getIndexPath: getIndexPath
         ,deleteAll: deleteAll 
     }
-}
-
-export const CakeBrowserInputFilesSetup = {
-    in: createAndSetupFileIn
 }

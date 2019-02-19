@@ -3,27 +3,17 @@ import { WithDisabledResponseHeaders } from './session/WithDisabledResponseHeade
 import { InterceptableResponseSession } from './session/InterceptableResponseSession'
 import { AmnesicSession } from './session/AmnesicSession'
 
-import { CakeBrowserInputFilesSetup } from './cakeBrowserInputFiles/CakeBrowserInputFilesSetup'
+import {app} from 'electron'
+
 import { CakeBrowserWindow } from './window/CakeBrowserWindow'
-
-import {app, dialog} from 'electron'
-
-import fs from 'fs'
-import expandTilde from 'expand-tilde'
+import { getFolderPathFromUser, createAndSetupFilesIn } from './cakeBrowserInputFiles'
 
 
 async function init () {
 
-    const argsDir = process.argv.slice(2)[0]
-    const expandedArgsDir = argsDir !== undefined && expandTilde(argsDir)
-
-    const srcDir =  fs.existsSync(expandedArgsDir)
-        ? expandedArgsDir
-        : dialog.showOpenDialog({
-            properties: ['openDirectory']
-        })[0]
+    const srcDir = getFolderPathFromUser()
     
-    let cakeFiles = await CakeBrowserInputFilesSetup.in(srcDir)
+    let cakeFiles = await createAndSetupFilesIn(srcDir)
 
     let mainWindow = CakeBrowserWindow({
         getIndexFilePathFn: cakeFiles.getIndexPath
@@ -39,6 +29,7 @@ async function init () {
     )
 
     mainWindow.on('closed', function() {
+        mainWindow.removeAllListeners()
         mainWindow = null;
         cakeFiles.deleteAll()
     })
