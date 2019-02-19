@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const npm = require('npm')
+const npm = require('global-npm')
 
 npm.load({}, (err) => {
     if(err) throw err
