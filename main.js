@@ -8,17 +8,20 @@ import { CakeBrowserWindow } from './window/CakeBrowserWindow'
 
 import {app, dialog} from 'electron'
 
-app.on('will-finish-launching', () => {
-    app.on('open-file', event => {
-        console.log(JSON.stringify(event, null, 2))
-    })
-})
+import fs from 'fs'
+import expandTilde from 'expand-tilde'
+
 
 async function init () {
-    
-    const srcDir = dialog.showOpenDialog({
-        properties: ['openDirectory']
-    })[0]
+
+    const argsDir = process.argv.slice(2)[0]
+    const expandedArgsDir = argsDir !== undefined && expandTilde(argsDir)
+
+    const srcDir =  fs.existsSync(expandedArgsDir)
+        ? expandedArgsDir
+        : dialog.showOpenDialog({
+            properties: ['openDirectory']
+        })[0]
     
     let cakeFiles = await CakeBrowserInputFilesSetup.in(srcDir)
 
