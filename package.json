@@ -23,6 +23,8 @@
     },
     "dependencies": {
         "cheerio": "^1.0.0-rc.2",
+        "chokidar": "^2.1.2",
+        "common-tags": "^1.8.0",
         "electron": "^4.0.4",
         "esm": "^3.2.4",
         "expand-tilde": "^2.0.2",

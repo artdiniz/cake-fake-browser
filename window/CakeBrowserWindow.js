@@ -1,13 +1,14 @@
 import {GenericBrowserWindow} from './GenericBrowserWindow'
+import { promises } from 'fs';
 
 function createCakeBrowserWindow(getIndexFilePath) {
     const cakeBrowserWindow = GenericBrowserWindow({title: "Caelum Cake Browser"})
-    
-    const indexPath = getIndexFilePath()
 
-    cakeBrowserWindow.loadFile(indexPath)
-    
-    cakeBrowserWindow.once('ready-to-show', () => cakeBrowserWindow.show())
+    Promise.resolve(getIndexFilePath())
+        .then(indexPath => {
+            cakeBrowserWindow.loadFile(indexPath)
+            cakeBrowserWindow.once('ready-to-show', () => cakeBrowserWindow.show())
+        })
     
     cakeBrowserWindow.on('closed', () => {
         cakeBrowserWindow.removeAllListeners()
