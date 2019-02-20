@@ -16,12 +16,12 @@ function createCakeBrowserWindow(getIndexFilePath) {
 
     cakeBrowserWindow.webContents.on('new-window', async (event, newWindowURL, frameName, disposition, options, additionalFeatures) => {
         event.preventDefault()
-        const win = await createCakeBrowserWindow(otherURL => getIndexFilePath({
+        const win = await createCakeBrowserWindow(({withOpenURL: otherURL} = {}) => getIndexFilePath({
             withOpenURL: otherURL || newWindowURL
         }))
         event.newGuest = win
     })
-
+    
     return cakeBrowserWindow
 }
 
