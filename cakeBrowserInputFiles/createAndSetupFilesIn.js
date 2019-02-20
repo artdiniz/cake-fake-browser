@@ -3,7 +3,9 @@ import path from 'path'
 import tmp from 'tmp'
 import gulp from 'gulp'
 import memoize from "memoizee"
-import {stripIndent} from 'common-tags'
+import {stripIndent, } from 'common-tags'
+
+import chalk from 'chalk'
 
 import cheerio from 'cheerio'
 
@@ -12,39 +14,60 @@ import expandTilde from 'expand-tilde'
 import gulpDebug from 'gulp-debug'
 
 import chokidar from 'chokidar'
+import isNumber from 'lodash/isNumber'
 
-function createCakeIndexFileBuilder({indexFileDirPath} = {}) {
-    
-    const defaultIndexFileContent = (async function() {
-        const browserIndexRelativeFilePath = await new Promise((resolve, reject) => {
-            const fileNames = ['index']
+function log(...params) {
+    const resultString = params
+        .map(toPrint => isNumber(toPrint)
+            ? Array.from(Array(toPrint)).map(() => '\n').join('')
+            : toPrint
+        )
+        .join('')
 
-            const fileNamesWithExtension = fileNames.map(name => `${name}.html`)
+    console.log(resultString)
+}
 
-            console.log(stripIndent`
-                Waiting for ${fileNamesWithExtension.length > 1 ? 'files': 'file'}: ${
-                    fileNamesWithExtension
-                        .map(name => `"${name}"`).join(' or ')
-                }
+const getIndexFilePathAsyncIn = function(folderPath) {
+    return new Promise((resolve, reject) => {
+        
+        const fileNames = ['index', 'main', 'cake', 'browser']
+        const fileNamesWithExtension = fileNames.map(name => `${name}.html`)
 
-            `)
+        log(
+            1
+            ,stripIndent`
+            Looking in ${chalk.grey(chalk.underline(folderPath))} for ${fileNamesWithExtension.length > 1 ? 'files': 'file'}: ${
+                fileNamesWithExtension
+                    .map(name => chalk.cyan(chalk.underline(name)))
+                    .join(' or ')
+            }
+            `
+            ,1
+        )
 
-            // TODO search any html?
-            const indexWatcher = chokidar.watch(fileNamesWithExtension, {
-                ignoreInitial: false
-                ,cwd: indexFileDirPath
-                ,awaitWriteFinish: true
-            })
-
-            indexWatcher.once('add', (path) => {
-                resolve(path)
-                indexWatcher.close()
-            })
+        const indexWatcher = chokidar.watch(`+(${fileNamesWithExtension.join('|')})`, {
+            ignoreInitial: false
+            ,cwd: folderPath
+            ,awaitWriteFinish: true
         })
 
-        console.log('Found index file: ' + browserIndexRelativeFilePath)
+        indexWatcher.once('all', (eventName, indexFilePath) => {
+            indexWatcher.close()
+            log(
+                    'Found file: '
+                    ,chalk.cyan(chalk.underline(indexFilePath))
+                    ,2
+                )
+            resolve(path.join(folderPath, indexFilePath))
+        })
+    })
+}
 
-        const browserIndexFilePath = path.join(indexFileDirPath, browserIndexRelativeFilePath)
+const createCakeIndexFileBuilder = function({indexFileDirPath} = {}) {
+    const browserIndexFilePathPromise = getIndexFilePathAsyncIn(indexFileDirPath)
+    
+    const defaultIndexFileContent = (async function() {
+        const browserIndexFilePath = await browserIndexFilePathPromise
         
         const browserIndexFileContent = fs.readFileSync(browserIndexFilePath)
         const $defaultPage = cheerio.load(browserIndexFileContent)
@@ -54,11 +77,11 @@ function createCakeIndexFileBuilder({indexFileDirPath} = {}) {
         return $defaultPage.html()
     })()
 
-
     const createwithOpenURL = memoize(async function createIndexFile(destDir, iframeSRC) {        
-        const newIndex = tmp.fileSync({template: path.join(destDir, `index-XXXXXX.html`)})
-
+        
         const $page = cheerio.load(await defaultIndexFileContent)
+
+        const newIndex = tmp.fileSync({template: path.join(destDir, `index-XXXXXX.html`)})
 
         if(iframeSRC !== undefined && iframeSRC !== null) {
             $page('iframe').attr('src', iframeSRC)
@@ -74,31 +97,53 @@ function createCakeIndexFileBuilder({indexFileDirPath} = {}) {
     }
 }
 
-const move = function moveWithGulp({src, dest, logPrefix = '' }){
+const move = function moveWithGulp({src, dest, fileLogPrefix = '', logStartTitle = 'Copying files', logEndTitle = 'Copying successfull'}){
     return new Promise((resolve, reject) => {
+        log(
+            2
+            ,stripIndent`
+            ${chalk.bgBlack(chalk.green(logStartTitle))}
+
+            From: ${
+                chalk.grey(chalk.underline(src))
+            }
+            To: ${
+                chalk.grey(chalk.underline(dest))
+            }
+            `, 
+            1
+        )
+
         gulp.src(src)
-            .pipe(gulpDebug({title: `${logPrefix} -> `}))
+            .pipe(gulpDebug({
+                title: `${fileLogPrefix} -> `
+            }))
             .pipe(gulp.dest(dest))
             .on('end', result => {
-                console.log(`\nMoved files to: ${dest} \n`)
+                log(
+                    1
+                    ,chalk.bgBlack(chalk.green(logEndTitle))
+                    ,2
+                )
                 resolve()
             })
             .on('error', error => {
                 reject(error)
             })
-    })
+    
+        })
 }
 
 const createTmpCakeDirFrom = async function(srcDir) {
     
     const tmpFolder = tmp.dirSync({unsafeCleanup: true})
-    
-    console.log(`\nLoading files from: ${srcDir} \n`)
 
     await move({
         src: path.join(srcDir, '**/*')
         ,dest: tmpFolder.name
-        ,logPrefix: '[Initial setup]'
+        ,logStartTitle: '[Initial setup] Copying files.'
+        ,fileLogPrefix: '[Initial setup]'
+        ,logEndTitle: '[Initial setup] Copy succesfull'
     })
     
     return {
@@ -122,7 +167,9 @@ export const createAndSetupFilesIn = async function (srcDir) {
         move({
             src: path.join(srcDir, filePath)
             ,dest: tmpCakeDir.getPath()
-            ,logPrefix: `[Update][${eventName.toUpperCase()}]`
+            ,logStartTitle: `[Update][${eventName.toUpperCase()}] Starting copying files`
+            ,fileLogPrefix: `[Update][${eventName.toUpperCase()}]`
+            ,logEndTitle: `[Update][${eventName.toUpperCase()}] Copy succesfull`
         })
     })
     
