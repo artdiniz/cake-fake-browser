@@ -1,3 +1,3 @@
-export { createAndSetupFilesIn } from './createAndSetupFilesIn'
+export { setupCakeFiles } from './setupCakeFiles'
 
 export { getFolderPathFromUser } from './getFolderPathFromUser'

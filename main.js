@@ -6,14 +6,14 @@ import { AmnesicSession } from './session/AmnesicSession'
 import {app} from 'electron'
 
 import { CakeBrowserWindow } from './window/CakeBrowserWindow'
-import { getFolderPathFromUser, createAndSetupFilesIn } from './cakeBrowserInputFiles'
+import { getFolderPathFromUser, setupCakeFiles } from './cakeBrowserInputFiles'
 
 
 async function init () {
 
     const srcDir = getFolderPathFromUser()
     
-    let cakeFiles = await createAndSetupFilesIn(srcDir)
+    const cakeFiles = await setupCakeFiles({in: srcDir})
 
     let mainWindow = CakeBrowserWindow({
         getIndexFilePathFn: cakeFiles.getIndexPath
@@ -31,7 +31,6 @@ async function init () {
     mainWindow.on('closed', function() {
         mainWindow.removeAllListeners()
         mainWindow = null;
-        cakeFiles.deleteAll()
     })
 
     let cleanedAllStorage = false
@@ -46,9 +45,8 @@ async function init () {
                 .forgetEverything()
                 .then(() => {
                     cleanedAllStorage = true
-                    console.log("–––––––––––––––  END BEFORE QUIT")
-                    
-                    app.quit()
+                    console.log("–––––––––––––––  END BEFORE QUIT")                    
+                    app.quit()                    
                 })
                 .catch((e) => {
                     console.log("Could not clear storage", e)
