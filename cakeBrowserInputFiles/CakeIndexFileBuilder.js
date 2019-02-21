@@ -2,16 +2,15 @@ import path from 'path'
 import fs from 'fs'
 
 import tmp from 'tmp'
-import cheerio from 'cheerio'
 import chalk from 'chalk'
 import { stripIndent } from 'common-tags'
 import chokidar from 'chokidar'
 import memoize from "memoizee"
 
 import { log } from './log'
+import { CakeIndexFileContent } from './CakeIndexFileContent';
 
 const getIndexFilePathAsyncIn = function (folderPath) {
-
     return new Promise((resolve, reject) => {
         const fileNames = ['index', 'main', 'cake', 'browser']
         const fileNamesWithExtension = fileNames.map(name => `${name}.html`)
@@ -32,40 +31,33 @@ const getIndexFilePathAsyncIn = function (folderPath) {
             awaitWriteFinish: true
         })
         
-        indexWatcher.once('all', (eventName, indexFilePath) => {
-            indexWatcher.close()
-            log('Found file: ', chalk.cyan(chalk.underline(indexFilePath)), 2)
-            resolve(path.join(folderPath, indexFilePath))
-        })
+        indexWatcher
+            .once('all', (eventName, indexFilePath) => {
+                indexWatcher.close()
+                log('Found file: ', chalk.cyan(chalk.underline(indexFilePath)), 2)
+                resolve(path.join(folderPath, indexFilePath))
+            })
+            .once('error', (error) => {
+                indexWatcher.close()
+                reject(error)
+            })
     })
 }
 
 export const CakeIndexFileBuilder = function ({ indexFileDirPath } = {}) {
 
-    const browserIndexFilePathPromise = getIndexFilePathAsyncIn(indexFileDirPath)
-
-    const defaultIndexFileContent = (async function () {
-        const browserIndexFilePath = await browserIndexFilePathPromise
-        const browserIndexFileContent = fs.readFileSync(browserIndexFilePath)
-        const $defaultPage = cheerio.load(browserIndexFileContent)
-
-        $defaultPage('iframe')
-            .attr('sandbox', 'allow-scripts allow-same-origin allow-popups allow-pointer-lock allow-forms')
-
-        return $defaultPage.html()
-    })()
+    const parsedIndexContentAsync = getIndexFilePathAsyncIn(indexFileDirPath)
+        .then(indexFilePath => fs.readFileSync(indexFilePath))
+        .then(indexContent => CakeIndexFileContent.withSandboxedIframe(indexContent))
 
     const createwithOpenURL = memoize(async function createIndexFile(destDir, iframeSRC) {
-
-        const $page = cheerio.load(await defaultIndexFileContent)
-
         const newIndex = tmp.fileSync({ template: path.join(destDir, `index-XXXXXX.html`) })
         
-        if (iframeSRC !== undefined && iframeSRC !== null) {
-            $page('iframe').attr('src', iframeSRC)
-        }
+        const parsedIndexContent = await parsedIndexContentAsync
+        
+        const newIndexContent = CakeIndexFileContent.withIframeSrc(parsedIndexContent, iframeSRC)
 
-        fs.writeFileSync(newIndex.fd, $page.html())
+        fs.writeFileSync(newIndex.fd, newIndexContent)
 
         return newIndex
 
