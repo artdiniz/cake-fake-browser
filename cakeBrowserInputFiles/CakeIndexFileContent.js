@@ -15,8 +15,7 @@ const withSandboxedIframe = function(baseContent) {
         'allow-scripts'
     ]
 
-    $defaultPage('iframe')
-        .attr('sandbox', iframeSandboxProps.join(' '))
+    $defaultPage('iframe').attr('sandbox', iframeSandboxProps.join(' '))
 
     return $defaultPage.html()
 }
