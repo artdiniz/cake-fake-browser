@@ -18,9 +18,15 @@ const getIndexFilePathAsyncIn = function (folderPath) {
         log(
             1
             ,stripIndent`
-            Looking in ${chalk.grey(chalk.underline(folderPath))} for ${fileNamesWithExtension.length > 1 ? 'files' : 'file'}: ${fileNamesWithExtension
-                .map(name => chalk.cyan(chalk.underline(name)))
-                .join(' or ')}
+                Looking in ${chalk.grey(folderPath)} for ${fileNamesWithExtension.length > 1 ? 'files' : 'file'}:
+
+                    ${
+                        fileNamesWithExtension
+                            .map(name => chalk.cyan(name))
+                            .map(name => `${name}`)
+                            .join(' or ')
+                    }
+
             `
             ,1
         )

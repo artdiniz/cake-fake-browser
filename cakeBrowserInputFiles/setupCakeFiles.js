@@ -23,10 +23,10 @@ const move = function moveWithGulp({src, dest, fileLogPrefix = '', logStartTitle
             ${chalk.bgBlack(chalk.green(logStartTitle))}
 
             From: ${
-                chalk.grey(chalk.underline(src))
+                chalk.grey(src)
             }
             To: ${
-                chalk.grey(chalk.underline(dest))
+                chalk.grey(dest)
             }
             `, 
             1
