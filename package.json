@@ -16,7 +16,7 @@
     },
     "main": "main.js",
     "bin": {
-        "cake": "./dist/bin.js"
+        "cake": "./dist/index.js"
     },
     "scripts": {
         "start": "electron ./index",
