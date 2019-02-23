@@ -8,6 +8,10 @@ import {app} from 'electron'
 import { CakeBrowserWindow } from './window/CakeBrowserWindow'
 import { getFolderPathFromUser, setupCakeFiles } from './cakeBrowserInputFiles'
 
+process.on('unhandledRejection', (error, rejectedPromise) => {
+    console.error('Unhandled Rejection at:', rejectedPromise, 'reason:', error);
+    process.exit(1)
+})
 
 async function init () {
 
