@@ -19,14 +19,15 @@
         "cake": "./dist/bin.js"
     },
     "scripts": {
-        "start": "electron ./index"
+        "start": "electron ./index",
+        "start-class": "run-electron ./index"
     },
     "dependencies": {
         "chalk": "^2.4.2",
         "cheerio": "^1.0.0-rc.2",
         "chokidar": "^2.1.2",
         "common-tags": "^1.8.0",
-        "electron": "^4.0.4",
+        "electron": "^4.0.5",
         "esm": "^3.2.4",
         "expand-tilde": "^2.0.2",
         "glob": "^7.1.3",
@@ -37,6 +38,7 @@
         "lodash": "^4.17.11",
         "memoizee": "^0.4.14",
         "read-pkg-up": "^4.0.0",
+        "run-electron": "github:artdiniz/run-electron#fixNewLine",
         "tmp": "0.0.33"
     }
 }

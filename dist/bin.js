@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+process.env.NODE_NO_WARNINGS = 1
+
 // Looking for this modules own package.json file and running its start script via npm
 // We run the start script so we can run electron installed as a dependency.
 // With electron as dependency, we don't need to have a build step nor a publish method for the binaries
@@ -14,7 +16,7 @@ const cakePackageDir = path.dirname(pkgJSONPath)
 
 npm.load({prefix: cakePackageDir}, (err) => {
     if(err) throw err
-    npm.commands["run-script"](["start", ...process.argv.slice(2)], (err) => {
+    npm.commands["run-script"](["start-class", ...process.argv.slice(2)], (err) => {
         if(err) throw err
     })
 })
