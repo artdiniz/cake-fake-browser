@@ -52,11 +52,16 @@ const getIndexFilePathAsyncIn = function (folderPath) {
 
 export const CakeIndexFileBuilder = function ({ indexFileDirPath } = {}) {
 
-    const parsedIndexContentAsync = getIndexFilePathAsyncIn(indexFileDirPath)
-        .then(indexFilePath => fs.readFileSync(indexFilePath))
-        .then(indexContent => CakeIndexFileContent.withSandboxedIframe(indexContent))
+    const indexPathAsync = getIndexFilePathAsyncIn(indexFileDirPath)
+
 
     const createwithOpenURL = memoize(async function createIndexFile(destDir, iframeSRC) {
+        const parsedIndexContentAsync = indexPathAsync
+            .then(indexFilePath => fs.readFileSync(indexFilePath))
+            .then(indexContent => CakeIndexFileContent.withSandboxedIframe(indexContent))
+
+        console.log('ICreated new file for: ', chalk.cyan(iframeSRC))
+
         const newIndex = tmp.fileSync({ template: path.join(destDir, `index-XXXXXX.html`) })
         
         const parsedIndexContent = await parsedIndexContentAsync
@@ -68,6 +73,22 @@ export const CakeIndexFileBuilder = function ({ indexFileDirPath } = {}) {
         return newIndex
 
     }, { promise: true })
+
+    
+    indexPathAsync.then(indexFilePath => {
+        const indexWatcher = chokidar.watch(indexFilePath, {
+            ignoreInitial: true,
+            awaitWriteFinish: true
+        })
+        
+        indexWatcher
+            .on('all', (eventName, indexFilePath) => {
+                log(`I[Update][${eventName}]: `, chalk.cyan(chalk.underline(indexFilePath)), 2)
+                createwithOpenURL.clear()
+            })
+    })
+    
+
 
     return {
         withOpenURL: (openURL) => createwithOpenURL(indexFileDirPath, openURL)

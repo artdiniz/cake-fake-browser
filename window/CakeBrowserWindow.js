@@ -6,7 +6,7 @@ function createCakeBrowserWindow(getIndexFilePath) {
 
     Promise.resolve(getIndexFilePath())
         .then(indexPath => {
-            cakeBrowserWindow.loadFile(indexPath)
+            cakeBrowserWindow.loadURL('file://' + indexPath)
             cakeBrowserWindow.once('ready-to-show', () => cakeBrowserWindow.show())
         })
     
