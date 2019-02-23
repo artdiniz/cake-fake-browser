@@ -1,15 +1,13 @@
-import { dialog } from 'electron'
-
 import fs from 'fs'
-import expandTilde from 'expand-tilde'
+import { dialog } from 'electron'
+import { resolveAbsolutePath } from './resolveAbsolutePath'
 
 
 export function getFolderPathFromUser() {
-    const argsDir = process.argv.slice(2)[0]
-    const expandedArgsDir = argsDir !== undefined && expandTilde(argsDir)
+    const argsDir = resolveAbsolutePath(process.argv.slice(2)[0])
 
-    const srcDir = fs.existsSync(expandedArgsDir)
-        ? expandedArgsDir
+    const srcDir = fs.existsSync(argsDir)
+        ? argsDir
         : dialog.showOpenDialog({
             properties: ['openDirectory']
         })[0]
