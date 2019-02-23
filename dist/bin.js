@@ -7,10 +7,10 @@ process.env.NODE_NO_WARNINGS = 1
 // With electron as dependency, we don't need to have a build step nor a publish method for the binaries.
 // We can just `npm install -g` and run the application via CLI.
 
-const path = require('path')
+import path from 'path'
 
-const npm = require('global-npm')
-const readPkgUp = require('read-pkg-up')
+import npm from 'global-npm'
+import readPkgUp from 'read-pkg-up'
 import _isUndefined from 'lodash/isUndefined'
 import _negate from 'lodash/negate'
 
