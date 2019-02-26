@@ -78,7 +78,7 @@ async function init () {
 
 
         if(stoppedCakeFilesWatcher && (cleanedAllStorage || cleanedAllStorageError)) {
-            console.log('Cake Browser cleanup finished.')
+            console.log('\nCake Browser cleanup finished.')
         }
 
         if(!event.defaultPrevented){
