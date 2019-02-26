@@ -1,8 +1,10 @@
 import {GenericBrowserWindow} from './GenericBrowserWindow'
-import { promises } from 'fs';
+
 
 function createCakeBrowserWindow(getIndexFilePath) {
-    const cakeBrowserWindow = GenericBrowserWindow({title: "Caelum Cake Browser"})
+    let cakeBrowserWindow = GenericBrowserWindow({
+        title: "Caelum Cake Browser"
+    })
 
     Promise.resolve(getIndexFilePath())
         .then(indexPath => {
@@ -12,14 +14,19 @@ function createCakeBrowserWindow(getIndexFilePath) {
     
     cakeBrowserWindow.on('closed', () => {
         cakeBrowserWindow.removeAllListeners()
+        cakeBrowserWindow = null
     })
 
     cakeBrowserWindow.webContents.on('new-window', async (event, newWindowURL, frameName, disposition, options, additionalFeatures) => {
         event.preventDefault()
-        const win = await createCakeBrowserWindow(({withOpenURL: otherURL} = {}) => getIndexFilePath({
+        let win = await createCakeBrowserWindow(({withOpenURL: otherURL} = {}) => getIndexFilePath({
             withOpenURL: otherURL || newWindowURL
         }))
         event.newGuest = win
+        win.once('closed', () => {
+            win = null
+            event.newGuest = null
+        })
     })
     
     return cakeBrowserWindow

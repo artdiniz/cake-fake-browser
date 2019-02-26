@@ -33,30 +33,58 @@ async function init () {
     )
 
     mainWindow.on('closed', function() {
-        mainWindow.removeAllListeners()
         mainWindow = null;
     })
 
     let cleanedAllStorage = false
-    let storageCleanError = false
+    let cleanedAllStorageError = false
+
+    let stoppedCakeFilesWatcher = false
 
     app.on('will-quit', (event) => {
-        if(!cleanedAllStorage && !storageCleanError) {
+        
+        if(!stoppedCakeFilesWatcher) {
             event.preventDefault()
-            console.log("––––––––––––––– BEGIN BEFORE QUIT")
+            
+            cakeFiles.cleanup()
+            stoppedCakeFilesWatcher = true
 
-            session
-                .forgetEverything()
+            app.quit()
+        }
+        
+        if(!cleanedAllStorage && !cleanedAllStorageError) {
+            
+            event.preventDefault()
+            console.log("––––––––––––––– BEGIN Storage cleanup")
+
+            session.forgetEverything()
                 .then(() => {
                     cleanedAllStorage = true
-                    console.log("–––––––––––––––  END BEFORE QUIT")                    
-                    app.quit()                    
+                    console.log("––––––––––––––– END Storage cleanup")
+
+                    // TODO fix quit call not working when user Quits (CMD+Q) without navigating to other site in cake browser
+                    app.quit()
                 })
                 .catch((e) => {
-                    console.log("Could not clear storage", e)
-                    storageCleanError = true
+                    cleanedAllStorageError = true
+                    console.log("––––––––––––––– END ERROR Storage cleanup", e)
+                    
+                    // TODO fix quit call not working when user Quits (CMD+Q) without navigating to other site in cake browser
+                    app.quit()
                 })
+
+            app.quit()
+        } 
+
+
+        if(stoppedCakeFilesWatcher && (cleanedAllStorage || cleanedAllStorageError)) {
+            console.log('Cake Browser cleanup finished.')
         }
+
+        if(!event.defaultPrevented){
+            console.log('Quiting!')
+        }
+
     })
 }
 
