@@ -9,7 +9,8 @@ process.env.NODE_NO_WARNINGS = 1
 
 import path from 'path'
 
-import npm from 'global-npm'
+import execa from 'execa'
+
 import readPkgUp from 'read-pkg-up'
 import _isUndefined from 'lodash/isUndefined'
 import _negate from 'lodash/negate'
@@ -20,12 +21,11 @@ const pkgJSONPath =  readPkgUp.sync({cwd: __dirname}).path
 const cakePackageDir = path.dirname(pkgJSONPath)
 
 const argsDir = resolveAbsolutePath(process.argv.slice(2)[0])
-
 const args = [argsDir, ...process.argv.slice(3)].filter(_negate(_isUndefined))
 
-npm.load({prefix: cakePackageDir}, (err) => {
-    if(err) throw err
-    npm.commands["run-script"](["start-class",  ...args], (err) => {
-        if(err) throw err
-    })
+execa('npm', ['run-script', 'start-class', ...args], {
+    cwd: cakePackageDir
+    ,stdin: process.stdin
+    ,stdout: process.stdout
+    ,stderr: process.stderr
 })
