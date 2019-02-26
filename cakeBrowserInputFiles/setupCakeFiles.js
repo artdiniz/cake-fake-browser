@@ -65,7 +65,7 @@ const getIndexFilePathAsyncIn = function (folderPath) {
     })
 }
 
-const onFSUpdate = function(globPath, callback) {
+const setFileSystemWatcher = function(globPath, callback) {
     let watcher = chokidar.watch(globPath, {
         ignoreInitial: true
         ,awaitWriteFinish: true
@@ -73,17 +73,20 @@ const onFSUpdate = function(globPath, callback) {
 
     watcher.on('all', callback)
 
-    return () => {
-        if(watcher !== null) {
-            watcher.close()
-            watcher = null
-            log(
-                1
-                , `Closing watcher: ${globPath}`
-                ,1
-            )
+    return {
+        clear: () => {
+            if(watcher !== null) {
+                watcher.close()
+                watcher = null
+            }
         }
+        ,toString: () => `FS Watcher on: ${globPath}`
     }
+}
+
+const clearFileSystemWatcher = function(watcher) {
+    watcher.clear()
+    log(`Closing ${watcher}`)
 }
 
 export const setupCakeFiles = async function ({in: srcDir}) {
@@ -93,12 +96,12 @@ export const setupCakeFiles = async function ({in: srcDir}) {
 
     const cakeIndexFileBuilder = CakeIndexFileBuilder({indexFilePath})
 
-    const cleanupIndexFileWatcher = onFSUpdate(indexFilePath, (eventName) => {
+    const indexFileWatcher = setFileSystemWatcher(indexFilePath, (eventName) => {
         log(`[Update Index File][${eventName}]: `, chalk.cyan(chalk.underline(indexFilePath)), 2)
         cakeIndexFileBuilder.reloadIndexFile()
     })
 
-    const cleanupSrcFilesWatcher = onFSUpdate(path.join(srcDir, '**/*'), (eventName, filePath) => {
+    const srcFilesWatcher = setFileSystemWatcher(path.join(srcDir, '**/*'), (eventName, filePath) => {
         move({
             src: filePath
             ,base: srcDir
@@ -124,8 +127,10 @@ export const setupCakeFiles = async function ({in: srcDir}) {
         }
         
         ,cleanup: () => {
-           cleanupIndexFileWatcher()
-           cleanupSrcFilesWatcher()
+            log(1)
+            clearFileSystemWatcher(indexFileWatcher)
+            clearFileSystemWatcher(srcFilesWatcher)
+            log(1)
         }
     }
 }
