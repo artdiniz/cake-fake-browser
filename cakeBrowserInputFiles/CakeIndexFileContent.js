@@ -1,7 +1,10 @@
 import cheerio from 'cheerio'
+import fs from 'fs'
+
+import {html} from 'common-tags'
 
 const withSandboxedIframe = function(baseContent) {
-    const $defaultPage = cheerio.load(baseContent)
+    const $page = cheerio.load(baseContent)
     
     const iframeSandboxProps = [
         'allow-forms',
@@ -15,23 +18,57 @@ const withSandboxedIframe = function(baseContent) {
         'allow-scripts'
     ]
 
-    $defaultPage('iframe').attr('sandbox', iframeSandboxProps.join(' '))
+    $page('iframe').attr('sandbox', iframeSandboxProps.join(' '))
 
-    return $defaultPage.html()
+    const newContent = $page.html()
+
+    return newContent
 }
 
 const withIframeSrc = function(baseContent, iframeSRC) {
-    
+    let newContent = baseContent
+
     if (iframeSRC !== undefined && iframeSRC !== null) {
         const $page = cheerio.load(baseContent)
         $page('iframe').attr('src', iframeSRC)
-        baseContent = $page.html()
+        newContent = $page.html()
     }
 
-    return baseContent
+    return newContent
 }
 
-export const CakeIndexFileContent = {
-    withSandboxedIframe
-    ,withIframeSrc
+const withInjectedScripts = function(baseContent, scriptPaths) {
+    const $page = cheerio.load(baseContent)
+
+    const preloadScripts = scriptPaths
+        .map(path => fs.readFileSync(path))
+        .map(code => html`
+            ;(()=>{
+                ${code}
+            })()
+        `)
+        .join('\n')
+
+    $page('body').append(html`
+        <script>
+            ${preloadScripts}
+        </script>
+    `)
+
+    const newContent = $page.html()
+    
+    return newContent
+}
+
+export const CakeIndexFileContent = function(baseContent = '') {    
+    
+    const withBaseContentArg = fn => (...args) => fn(baseContent, ...args)
+    const chainable = fn => (...args) => CakeIndexFileContent(fn(...args))
+
+    return {
+        withSandboxedIframe: chainable(withBaseContentArg(withSandboxedIframe))
+        ,withIframeSrc: chainable(withBaseContentArg(withIframeSrc))
+        ,withInjectedScripts: chainable(withBaseContentArg(withInjectedScripts))
+        ,toString: () => baseContent.toString()
+    }
 }
