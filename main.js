@@ -7,7 +7,7 @@ import {app} from 'electron'
 
 import { CakeBrowserWindow } from './window/CakeBrowserWindow'
 import { getFolderPathFromUser, setupCakeFiles } from './cakeBrowserInputFiles'
-import { createCleanupOnEventHandler } from './util/createOnEventCleanupHandler'
+import { createCleanupOnEventHandler } from './util/createCleanupOnEventHandler'
 
 
 process.on('unhandledRejection', (error, rejectedPromise) => {
