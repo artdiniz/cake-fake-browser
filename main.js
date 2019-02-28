@@ -7,6 +7,8 @@ import {app} from 'electron'
 
 import { CakeBrowserWindow } from './window/CakeBrowserWindow'
 import { getFolderPathFromUser, setupCakeFiles } from './cakeBrowserInputFiles'
+import { createCleanupOnEventHandler } from './util/createOnEventCleanupHandler'
+
 
 process.on('unhandledRejection', (error, rejectedPromise) => {
     console.error('Unhandled Rejection at:', rejectedPromise, 'reason:', error);
@@ -36,55 +38,35 @@ async function init () {
         mainWindow = null;
     })
 
-    let cleanedAllStorage = false
-    let cleanedAllStorageError = false
+    app.on('will-quit', createCleanupOnEventHandler(
+        async function cleanSessionStorage(event, cleanupLogger){ 
 
-    let stoppedCakeFilesWatcher = false
+            const forgotOrigins = await session.forgetEverything()
 
-    app.on('will-quit', (event) => {
-        
-        if(!stoppedCakeFilesWatcher) {
-            event.preventDefault()
-            
-            cakeFiles.cleanup()
-            stoppedCakeFilesWatcher = true
-
-            app.quit()
+            cleanupLogger.log(forgotOrigins
+                .map(origin => `Cleared all storge info for "${origin}"`)
+                .join('\n')
+            )
         }
-        
-        if(!cleanedAllStorage && !cleanedAllStorageError) {
-            
-            event.preventDefault()
-            console.log("––––––––––––––– BEGIN Storage cleanup")
+        ,{ whenDone: app.quit }
+    ))
 
-            session.forgetEverything()
-                .then(() => {
-                    cleanedAllStorage = true
-                    console.log("––––––––––––––– END Storage cleanup")
+    app.on('will-quit', createCleanupOnEventHandler(
+        function cleanCakeFilesWatcher(event, cleanupLogger){ 
+            const cleanedWatchers = cakeFiles.cleanup()
 
-                    // TODO fix quit call not working when user Quits (CMD+Q) without navigating to other site in cake browser
-                    app.quit()
-                })
-                .catch((e) => {
-                    cleanedAllStorageError = true
-                    console.log("––––––––––––––– END ERROR Storage cleanup", e)
-                    
-                    // TODO fix quit call not working when user Quits (CMD+Q) without navigating to other site in cake browser
-                    app.quit()
-                })
-
-            app.quit()
-        } 
-
-
-        if(stoppedCakeFilesWatcher && (cleanedAllStorage || cleanedAllStorageError)) {
-            console.log('\nCake Browser cleanup finished.')
+            cleanupLogger.log(cleanedWatchers
+                .map(watcher => `Closed ${watcher}`)
+                .join('\n')
+            )
         }
-
+        ,{ whenDone: app.quit }
+    ))
+        
+    app.on('will-quit', event => {
         if(!event.defaultPrevented){
-            console.log('Quiting!')
+            console.log('Good Bye! 🎂')
         }
-
     })
 }
 
