@@ -20,15 +20,13 @@ export function AmnesicSession(session) {
                 session.clearStorageData(
                     {origin: origin}
                     ,function(){
-                        resolve(`Cleared all storge info for "${origin}"`)
+                        resolve(origin)
                     }
                 )
             ))
         )
 
-        const printLogsPromise = clearStorageDataAsync.then(logs => logs.forEach(msg => console.log(msg)))
-
-        return printLogsPromise
+        return clearStorageDataAsync
     }
 
     function forgetEverything() {

@@ -2,12 +2,12 @@ import gulp from 'gulp'
 import {stripIndent} from 'common-tags'
 import chalk from 'chalk'
 import gulpDebug from 'gulp-debug'
-import { log } from './log'
+import { printLogs } from '../util/printLogs'
 import path from 'path'
 
 export const move = function moveWithGulp({src = './', dest = './dist', base = path.dirname(src), fileLogPrefix = '', logStartTitle = 'Copying files', logEndTitle = 'Copying successfull'}){
     return new Promise((resolve, reject) => {
-        log(
+        printLogs(
             2
             ,stripIndent`
             ${chalk.bgBlack(chalk.green(logStartTitle))}
@@ -28,7 +28,7 @@ export const move = function moveWithGulp({src = './', dest = './dist', base = p
             }))
             .pipe(gulp.dest(dest))
             .on('end', result => {
-                log(
+                printLogs(
                     1
                     ,chalk.bgBlack(chalk.green(logEndTitle))
                     ,2

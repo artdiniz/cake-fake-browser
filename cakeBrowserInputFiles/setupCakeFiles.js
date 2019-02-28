@@ -3,7 +3,7 @@ import tmp from 'tmp'
 import expandTilde from 'expand-tilde'
 
 import { move } from './move'
-import { log } from './log'
+import { printLogs } from '../util/printLogs'
 import { stripIndent } from 'common-tags'
 import chokidar from 'chokidar'
 import chalk from 'chalk'
@@ -30,7 +30,7 @@ const getIndexFilePathAsyncIn = function (folderPath) {
         const fileNames = ['index', 'main', 'cake', 'browser']
         const fileNamesWithExtension = fileNames.map(name => `${name}.html`)
 
-        log(
+        printLogs(
             1
             ,stripIndent`
                 Looking in ${chalk.grey(folderPath)} for ${fileNamesWithExtension.length > 1 ? 'files' : 'file'}:
@@ -55,7 +55,7 @@ const getIndexFilePathAsyncIn = function (folderPath) {
         indexWatcher
             .once('all', (eventName, indexFilePath) => {
                 indexWatcher.close()
-                log('Found file: ', chalk.cyan(chalk.underline(indexFilePath)), 2)
+                printLogs(`Found file: ${chalk.cyan(chalk.underline(indexFilePath))}`, 2)
                 resolve(path.join(folderPath, indexFilePath))
             })
             .once('error', (error) => {
@@ -66,27 +66,25 @@ const getIndexFilePathAsyncIn = function (folderPath) {
 }
 
 const setFileSystemWatcher = function(globPath, callback) {
-    let watcher = chokidar.watch(globPath, {
+    let chokidarWatcher = chokidar.watch(globPath, {
         ignoreInitial: true
         ,awaitWriteFinish: true
     })
 
-    watcher.on('all', callback)
+    chokidarWatcher.on('all', callback)
 
-    return {
+    const watcher = {
         clear: () => {
-            if(watcher !== null) {
-                watcher.close()
-                watcher = null
+            if(chokidarWatcher !== null) {
+                chokidarWatcher.close()
+                chokidarWatcher = null                    
             }
+            return true
         }
         ,toString: () => `FS Watcher on: ${globPath}`
     }
-}
 
-const clearFileSystemWatcher = function(watcher) {
-    watcher.clear()
-    log(`Closing ${watcher}`)
+    return watcher
 }
 
 export const setupCakeFiles = async function ({in: srcDir}) {
@@ -97,7 +95,7 @@ export const setupCakeFiles = async function ({in: srcDir}) {
     const cakeIndexFileBuilder = CakeIndexFileBuilder({indexFilePath})
 
     const indexFileWatcher = setFileSystemWatcher(indexFilePath, (eventName) => {
-        log(`[Update Index File][${eventName}]: `, chalk.cyan(chalk.underline(indexFilePath)), 2)
+        printLogs(`[Update Index File][${eventName}]: `, chalk.cyan(chalk.underline(indexFilePath)), 2)
         cakeIndexFileBuilder.reloadIndexFile()
     })
 
@@ -126,11 +124,9 @@ export const setupCakeFiles = async function ({in: srcDir}) {
             return indexFile.name
         }
         
-        ,cleanup: () => {
-            log(1)
-            clearFileSystemWatcher(indexFileWatcher)
-            clearFileSystemWatcher(srcFilesWatcher)
-            log(1)
-        }
+        ,cleanup: () => [
+            indexFileWatcher.clear() && indexFileWatcher
+            ,srcFilesWatcher.clear() && srcFilesWatcher
+        ]
     }
 }
