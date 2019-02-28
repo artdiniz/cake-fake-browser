@@ -3,6 +3,8 @@ import fs from 'fs'
 
 import {html} from 'common-tags'
 
+import {html as htmlBeautify} from 'js-beautify'
+
 const withSandboxedIframe = function(baseContent) {
     const $page = cheerio.load(baseContent)
     
@@ -69,6 +71,6 @@ export const CakeIndexFileContent = function(baseContent = '') {
         withSandboxedIframe: chainable(withBaseContentArg(withSandboxedIframe))
         ,withIframeSrc: chainable(withBaseContentArg(withIframeSrc))
         ,withInjectedScripts: chainable(withBaseContentArg(withInjectedScripts))
-        ,toString: () => baseContent.toString()
+        ,toString: () => htmlBeautify(baseContent.toString())
     }
 }
