@@ -22,26 +22,3 @@
     font-size: 2em;
     vertical-align: middle;
 }
-
-.cakePanel-chooseFilesBtn {
-    padding: 1em 2em;
-
-    font-size: 1em;
-
-    text-transform: uppercase;
-    color: rgba(255,255,255,.9);
-
-    cursor: pointer;
-
-    border: none;
-    border-radius: 2em;
-    background-color: rgb(51, 109, 119);
-}
-
-.cakePanel-chooseFilesBtn:hover:not(:active),
-.cakePanel-chooseFilesBtn:focus:not(:active) {
-    background-image: linear-gradient(
-        rgba(255,255,255,.1)
-        ,rgba(255,255,255,.1)
-    )
-}

@@ -12,12 +12,40 @@
     text-align: center;
 }
 
+.inputFilesPanel-btn {
+    padding: 1em 2em;
+
+    font-size: 1em;
+
+    text-transform: uppercase;
+    color: rgba(255,255,255,.9);
+
+    cursor: pointer;
+
+    border: none;
+    border-radius: 2em;
+    background-color: rgb(51, 109, 119);
+}
+
+.inputFilesPanel--loading .inputFilesPanel-btn {
+    cursor: not-allowed;
+}
+.inputFilesPanel--loading .inputFilesPanel-btn,
+:not(.inputFilesPanel--loading) > .inputFilesPanel-btn:hover:not(:active),
+:not(.inputFilesPanel--loading) > .inputFilesPanel-btn:focus:not(:active) {
+    background-image: linear-gradient(
+        rgba(255,255,255,.1)
+        ,rgba(255,255,255,.1)
+    )
+}
+
+
 .inputFilesPanel-progress,
 .inputFilesPanel-pathView {
     display: none;
 }
 
-.inputFilesPanel--active .inputFilesPanel-pathView {
+.inputFilesPanel--loading .inputFilesPanel-pathView {
     display: block;
 
     height: 1.5em;
@@ -29,7 +57,7 @@
     background: rgba(202,202,202,.9);
 }
 
-.inputFilesPanel--active .inputFilesPanel-progress {
+.inputFilesPanel--loading .inputFilesPanel-progress {
     display: block;
 
     fill: red;
