@@ -17,7 +17,7 @@ process.on('unhandledRejection', (error, rejectedPromise) => {
 
 async function init () {
 
-    const srcDir = getFolderPathFromUser()
+    const srcDir = await getFolderPathFromUser()
     
     const cakeFiles = await setupCakeFiles({in: srcDir})
 
