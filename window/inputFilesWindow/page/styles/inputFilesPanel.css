@@ -1,0 +1,37 @@
+.inputFilesPanel {
+    margin-top: 1em;
+    align-items: center;
+}
+
+.inputFilesPanel-instruction {
+    margin: 2em 0;
+    width: 25em;
+
+    line-height: 1.5;
+
+    text-align: center;
+}
+
+.inputFilesPanel-progress,
+.inputFilesPanel-pathView {
+    display: none;
+}
+
+.inputFilesPanel--active .inputFilesPanel-pathView {
+    display: block;
+
+    height: 1.5em;
+    margin-top: 1em;
+    padding: .2em .5em;
+
+    line-height: 1.5em;
+
+    background: rgba(202,202,202,.9);
+}
+
+.inputFilesPanel--active .inputFilesPanel-progress {
+    display: block;
+
+    fill: red;
+    margin-top: .5em;
+}

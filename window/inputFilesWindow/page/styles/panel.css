@@ -1,0 +1,13 @@
+.panel {
+    display: inline-flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+
+    padding: 2em;
+
+    background: rgba(255,255,255,.75);
+    border-radius: 2em;
+
+    color: rgb(24, 51, 56);
+}

@@ -1,0 +1,10 @@
+.cakeInitialPage {
+    height: 100vh;
+    width: 100vw;
+    background: rgb(91, 194, 212);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
