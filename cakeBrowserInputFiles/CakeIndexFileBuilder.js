@@ -19,7 +19,7 @@ export const CakeIndexFileBuilder = function ({ indexFilePath } = {}) {
             .withSandboxedIframe()
             .withIframeSrc(iframeSRC)
             .withInjectedScripts([
-                require.resolve('./injectedScripts/detectReload.js')
+                require.resolve('./injectedScripts/injectTest.js')
             ])
             .toString()
 
