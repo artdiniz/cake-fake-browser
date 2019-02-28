@@ -43,9 +43,8 @@ async function init () {
 
             const forgotOrigins = await session.forgetEverything()
 
-            cleanupLogger.log(forgotOrigins
-                .map(origin => `Cleared all storge info for "${origin}"`)
-                .join('\n')
+            cleanupLogger.log(
+                ...forgotOrigins.map(origin => `Cleared all storge info for "${origin}"`)
             )
         }
         ,{ whenDone: app.quit }
@@ -55,9 +54,8 @@ async function init () {
         function cleanCakeFilesWatcher(event, cleanupLogger){ 
             const cleanedWatchers = cakeFiles.cleanup()
 
-            cleanupLogger.log(cleanedWatchers
-                .map(watcher => `Closed ${watcher}`)
-                .join('\n')
+            cleanupLogger.log(
+                ...cleanedWatchers.map(watcher => `Closed ${watcher}`)
             )
         }
         ,{ whenDone: app.quit }
