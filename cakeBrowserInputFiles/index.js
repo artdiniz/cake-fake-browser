@@ -1,2 +1,2 @@
 export { setupCakeFiles } from './setupCakeFiles'
-export { getFolderPathFromUser } from './getFolderPathFromUser'
+export { resolveFolderPath } from './resolveFolderPath'

@@ -1,7 +1,6 @@
-import path from 'path'
-import { GenericBrowserWindow } from "../GenericBrowserWindow"
+import { GenericBrowserWindow } from "../../window/GenericBrowserWindow"
 
-const createCakeInputFilesWindow = () => {
+const createCakeWelcomeWindow = () => {
     let inputFilesWindow = GenericBrowserWindow()
 
     const cakePagePath = require.resolve('./page/index.html')
@@ -17,4 +16,4 @@ const createCakeInputFilesWindow = () => {
     return inputFilesWindow
 }
 
-export const CakeInputFilesWindow = createCakeInputFilesWindow
+export const CakeWelcomeWindow = createCakeWelcomeWindow

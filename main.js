@@ -6,8 +6,10 @@ import { AmnesicSession } from './session/AmnesicSession'
 import {app} from 'electron'
 
 import { CakeBrowserWindow } from './window/CakeBrowserWindow'
-import { getFolderPathFromUser, setupCakeFiles } from './cakeBrowserInputFiles'
+import { resolveFolderPath, setupCakeFiles } from './cakeBrowserInputFiles'
 import { createCleanupOnEventHandler } from './util/createCleanupOnEventHandler'
+
+import { CakeWelcomePage } from './welcome/CakeWelcomePage'
 
 
 process.on('unhandledRejection', (error, rejectedPromise) => {
@@ -17,9 +19,15 @@ process.on('unhandledRejection', (error, rejectedPromise) => {
 
 async function init () {
 
-    const srcDir = await getFolderPathFromUser()
+    const cakeWelcomePage = CakeWelcomePage()
+
+    const srcDir = await resolveFolderPath({
+        promptUserFunction: cakeWelcomePage.getSrcFolder
+    })
     
     const cakeFiles = await setupCakeFiles({in: srcDir})
+
+    cakeWelcomePage.setSrcFolder(srcDir)
 
     let mainWindow = CakeBrowserWindow({
         getIndexFilePathFn: cakeFiles.getIndexPath
@@ -36,6 +44,7 @@ async function init () {
 
     mainWindow.on('closed', function() {
         mainWindow = null;
+        mainWindow.removeAllListeners()
     })
 
     app.on('will-quit', createCleanupOnEventHandler(
