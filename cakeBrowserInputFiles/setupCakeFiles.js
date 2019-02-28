@@ -41,7 +41,6 @@ const getIndexFilePathAsyncIn = function (folderPath) {
                             .map(name => `${name}`)
                             .join(' or ')
                     }
-
             `
             ,1
         )
@@ -90,15 +89,6 @@ const setFileSystemWatcher = function(globPath, callback) {
 export const setupCakeFiles = async function ({in: srcDir}) {
     const tmpCakeDir = await createTmpCakeDirFrom(expandTilde(srcDir))
 
-    const indexFilePath = await getIndexFilePathAsyncIn(tmpCakeDir.name)
-
-    const cakeIndexFileBuilder = CakeIndexFileBuilder({indexFilePath})
-
-    const indexFileWatcher = setFileSystemWatcher(indexFilePath, (eventName) => {
-        printLogs(`[Update Index File][${eventName}]: `, chalk.cyan(chalk.underline(indexFilePath)), 2)
-        cakeIndexFileBuilder.reloadIndexFile()
-    })
-
     const srcFilesWatcher = setFileSystemWatcher(path.join(srcDir, '**/*'), (eventName, filePath) => {
         move({
             src: filePath
@@ -110,6 +100,14 @@ export const setupCakeFiles = async function ({in: srcDir}) {
         })
     })
 
+    const indexFilePath = await getIndexFilePathAsyncIn(tmpCakeDir.name)
+
+    const cakeIndexFileBuilder = CakeIndexFileBuilder({indexFilePath})
+
+    const indexFileWatcher = setFileSystemWatcher(indexFilePath, (eventName) => {
+        printLogs(`[Update Index File][${eventName}]: `, chalk.cyan(chalk.underline(indexFilePath)), 2)
+        cakeIndexFileBuilder.reloadIndexFile()
+    })
 
     return {
         getIndexPath: function getIndexPath({withOpenURL: openURL} = {}) {
