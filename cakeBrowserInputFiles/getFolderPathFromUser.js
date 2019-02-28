@@ -1,10 +1,10 @@
 import fs from 'fs'
 import { dialog } from 'electron'
-import { resolveAbsolutePath } from './resolveAbsolutePath'
+import { resolvePathFromCwd } from './resolvePathFromCwd'
 
 
 export function getFolderPathFromUser() {
-    const argsDir = resolveAbsolutePath(process.argv.slice(2)[0])
+    const argsDir = resolvePathFromCwd(process.argv.slice(2)[0])
 
     const srcDir = fs.existsSync(argsDir)
         ? argsDir

@@ -15,12 +15,12 @@ import readPkgUp from 'read-pkg-up'
 import _isUndefined from 'lodash/isUndefined'
 import _negate from 'lodash/negate'
 
-import { resolveAbsolutePath } from '../cakeBrowserInputFiles/resolveAbsolutePath'
+import { resolvePathFromCwd } from '../cakeBrowserInputFiles/resolvePathFromCwd'
 
 const pkgJSONPath =  readPkgUp.sync({cwd: __dirname}).path
 const cakePackageDir = path.dirname(pkgJSONPath)
 
-const argsDir = resolveAbsolutePath(process.argv.slice(2)[0])
+const argsDir = resolvePathFromCwd(process.argv.slice(2)[0])
 const args = [argsDir, ...process.argv.slice(3)].filter(_negate(_isUndefined))
 
 execa('npm', ['run-script', 'start-class', ...args], {
