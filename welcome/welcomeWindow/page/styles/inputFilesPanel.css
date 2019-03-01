@@ -101,6 +101,10 @@
     white-space: nowrap;
 }
 
+.inputFilesPanel--initial .inputFilesPanel-resetButton {
+    display: none;
+}
+
 /* .inputFilesPanel-pathView:after {
     content: '';
     display: inline-block;

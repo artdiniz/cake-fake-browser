@@ -18,6 +18,8 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
             requestAnimationFrame(() => {
                 $panel.classList.remove('inputFilesPanel--loading')
                 $panel.classList.remove('inputFilesPanel--loading')
+                $panel.classList.add('inputFilesPanel--initial')
+                
                 $inputFilesButton.textContent = buttonInitialContent
             })
         }
@@ -26,8 +28,9 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
 
     const renderIsLoading = ({srcFolder}) => {
         requestAnimationFrame(() => {
-            $panel.classList.add('inputFilesPanel--loading')
+            $panel.classList.remove('inputFilesPanel--initial')
             $panel.classList.remove('inputFilesPanel--finishedLoading')
+            $panel.classList.add('inputFilesPanel--loading')
     
             $$progressIcon.renderLoading()
     
@@ -43,6 +46,7 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
     const renderFinishedLoading = ({srcFolder}) => {
         requestAnimationFrame(() => {
             $panel.classList.remove('inputFilesPanel--loading')
+            $panel.classList.remove('inputFilesPanel--initial')
             $panel.classList.add('inputFilesPanel--finishedLoading')
             
             $$progressIcon.renderFinishedLoading()
