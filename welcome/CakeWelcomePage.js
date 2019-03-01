@@ -21,8 +21,8 @@ async function createCakeWelcomePage() {
     }
 
     const onReloadRequested = (callback) => {
-        ipcMain.once('cakeFilesInputReload', (event) => {
-            callback()
+        ipcMain.once('cakeFilesInputReload', (event, srcFolder) => {
+            callback(srcFolder)
         })
     }
 

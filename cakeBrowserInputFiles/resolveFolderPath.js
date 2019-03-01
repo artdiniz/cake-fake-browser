@@ -1,8 +1,8 @@
 import fs from 'fs'
 import { resolvePathFromCwd } from './resolvePathFromCwd'
 
-export async function resolveFolderPath({promptUserFunction}) {
-    const argsDir = resolvePathFromCwd(process.argv.slice(2)[0])
+export async function resolveFolderPath({promptUserFunction = () => Promise.reject('You must provide a prompt folder function'), appArguments = []}) {
+    const argsDir = resolvePathFromCwd(appArguments[0])
 
     const srcDir = fs.existsSync(argsDir)
         ? argsDir

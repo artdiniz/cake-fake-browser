@@ -20,7 +20,7 @@ process.on('unhandledRejection', (error, rejectedPromise) => {
 
 let restartFlag = false
 
-async function init () {
+async function init ({args = process.argv.slice(2)}) {
     app
         .removeAllListeners()
         .on('window-all-closed', app.quit)
@@ -29,7 +29,8 @@ async function init () {
     const cakeWelcomePage = await CakeWelcomePage()
 
     const srcDir = await resolveFolderPath({
-        promptUserFunction: cakeWelcomePage.getSrcFolder
+        appArguments: args
+        ,promptUserFunction: cakeWelcomePage.getSrcFolder
     })
     
     const cakeFiles = await setupCakeFiles({in: srcDir})
@@ -86,23 +87,27 @@ async function init () {
 
     const cleanupOnQuitPromise = Promise.all([sessionStorageCleanOnQuit, watchersCleanOnQuit])
     
-    cleanupOnQuitPromise
-        .then(() => {
-            if(restartFlag) {
-                printLogs(1, '* Reload cleanup succesfull! Reloading: *', 1)
-                restartFlag = false
-                return init().then(() => {
-                    printLogs(1, '* Reload successfull *', 1)
-                })
-            } else {
-                printLogs(1, '* Quit cleanup succesfull! *', 1)
-                app.quit()
-            }
-        })
+    cleanupOnQuitPromise.then(() => {
+        if(!restartFlag) {
+            printLogs(1, '* Quit cleanup succesfull! *', 1)
+            app.quit()
+        }
+    })
 
-    cakeWelcomePage.onReloadRequested(() => {
+    cakeWelcomePage.onReloadRequested(newSrcFolder => {
         restartFlag = true
         printLogs(1, '* Reload requested. Waiting for cleanup. *', 1)
+
+        cleanupOnQuitPromise
+            .then(() => {
+                printLogs(1, '* Reload cleanup succesfull! Reloading: *', 1)
+                restartFlag = false
+                return init({args: [newSrcFolder, ...process.argv.slice(3)]})
+            })
+            .then(() => {
+                printLogs(1, '* Reload successfull *', 1)
+            })
+
         app.quit()
     })
 

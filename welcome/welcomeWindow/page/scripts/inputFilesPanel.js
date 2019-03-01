@@ -67,7 +67,7 @@ $$panel.onInputFilesBtnClicked(() => {
             }
         )
     } else if(state.finishedLoading) {
-        ipcRenderer.send('cakeFilesInputReload')
+        ipcRenderer.send('cakeFilesInputReload', state.srcFolder)
     }
 })
 
