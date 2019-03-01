@@ -27,8 +27,6 @@ async function createCakeWelcomePage() {
     }
 
 
-
-
     return {
         getSrcFolder
         ,setSrcFolder

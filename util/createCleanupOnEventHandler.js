@@ -1,7 +1,5 @@
 import { AsyncLogger } from './AsyncLogger'
 import { printLogs } from './printLogs'
-import { sep } from 'path';
-
 /* 
     This function creates another function that receives a `event` as argument. 
     That returned function is an event handler and can be passed as argument to any kind of `EventEmitter.on` or `EventEmitter.addEventListener` function.

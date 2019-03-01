@@ -40,7 +40,7 @@
         "lodash": "^4.17.11",
         "memoizee": "^0.4.14",
         "read-pkg-up": "^4.0.0",
-        "run-electron": "github:artdiniz/run-electron#fixNewLine",
+        "run-electron": "github:artdiniz/run-electron#useExeca",
         "tmp": "0.0.33"
     }
 }
