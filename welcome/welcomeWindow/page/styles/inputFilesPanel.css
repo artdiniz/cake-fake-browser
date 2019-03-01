@@ -20,7 +20,7 @@
     display: none;
 }
 
-.inputFilesPanel-btn {
+.inputFilesPanel-button {
     padding: 1em 2em;
     min-width: 17.5em;
 
@@ -43,9 +43,13 @@
     transition: background-color .35s ease, color .2s ease, transform .35s ease;
 }
 
-.inputFilesPanel--loading .inputFilesPanel-btn,
-:not(.inputFilesPanel--loading) > .inputFilesPanel-btn:hover,
-:not(.inputFilesPanel--loading) > .inputFilesPanel-btn:focus {
+.inputFilesPanel-button + .inputFilesPanel-button {
+    margin-top: 1em;
+}
+
+.inputFilesPanel--loading .inputFilesButton--disabled,
+:not(.inputFilesPanel--loading) > .inputFilesPanel-button:hover,
+:not(.inputFilesPanel--loading) > .inputFilesPanel-button:focus {
     border-color: currentColor;
     color: rgba(201, 0, 0, 0.47);
 
@@ -55,15 +59,14 @@
     cursor: pointer;
 }
 
-.inputFilesPanel-btn:active {
+.inputFilesPanel-button:active {
     outline: none;
     transform: scale(0.75);
 
     transition: transform 1s ease;
 }
 
-
-.inputFilesPanel--loading .inputFilesPanel-btn {
+.inputFilesPanel--loading .inputFilesPanel-button {
     cursor: not-allowed;
 }
 

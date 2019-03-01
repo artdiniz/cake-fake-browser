@@ -1,24 +1,25 @@
 import { remote, ipcRenderer } from 'electron'
 import { $$InputFilesPanel } from './views/$$InputFilesPanel'
+import { stat } from 'fs';
 
 const state =  {
     isLoading: false
     ,srcFolder: ''
-    ,finishedLoading: false
+    ,hasFinishedLoading: false
 }
 
 const $$panel = $$InputFilesPanel(document.querySelector('.inputFilesPanel'))
 
 const render = () => {
-    if(state.isLoading && !state.finishedLoading) {
+    if(state.isLoading && !state.hasFinishedLoading) {
         $$panel.renderIsLoading({
             srcFolder: state.srcFolder
         })
-    } else if(state.finishedLoading){
+    } else if(state.hasFinishedLoading){
         $$panel.renderFinishedLoading({
             srcFolder: state.srcFolder
         })
-    } else if(!state.isLoading && !state.finishedLoading) {
+    } else if(!state.isLoading && !state.hasFinishedLoading) {
         $$panel.renderInitial()
     }
 }
@@ -35,39 +36,41 @@ ipcRenderer.once('cakeFilesSrcFolderLoaded', (event, srcFolder) => {
     setState({
         srcFolder: srcFolder
         ,isLoading: false
-        ,finishedLoading: true
+        ,hasFinishedLoading: true
     })
 })
 
 $$panel.onInputFilesBtnClicked(() => {
-    if(!state.isLoading && !state.finishedLoading) {
+    const isInitialLoad = !state.isLoading && !state.hasFinishedLoading
 
-        const previousState = JSON.parse(JSON.stringify(state))
+    const previousState = JSON.parse(JSON.stringify(state))
 
+    if(!state.isLoading){
         setState({
             isLoading: true
-            ,finishedLoading: false
+            ,hasFinishedLoading: false
             ,srcFolder: 'selecione uma pasta'
         })
-
+    
         remote.dialog.showOpenDialog(
-            {
-                properties: ['openDirectory', 'createDirectory']
-            }
+            { properties: ['openDirectory', 'createDirectory'] }
             ,(paths) => {
                 if(paths) {
                     setState({
                         srcFolder: paths[0]
                     })
-            
-                    ipcRenderer.send('cakeFilesInput', state.srcFolder)
+    
+                    if(isInitialLoad) {
+                        ipcRenderer.send('cakeFilesInput', state.srcFolder)
+                    } else {
+                        ipcRenderer.send('cakeFilesInputReload', state.srcFolder)
+                    }
+                    
                 } else {
                     setState(previousState)
                 }
             }
         )
-    } else if(state.finishedLoading) {
-        ipcRenderer.send('cakeFilesInputReload', state.srcFolder)
     }
 })
 

@@ -2,7 +2,7 @@ import { $$InputFilesProgressIcon } from "./$$InputFilesProgressIcon"
 
 export const $$InputFilesPanel = ($panel = document.querySelector()) => {
 
-    const $inputFilesButton = $panel.querySelector('.inputFilesPanel-button')
+    const $inputFilesButton = $panel.querySelector('.inputFilesPanel-chooseFolderButton')
     const $inputFilesPathView = $panel.querySelector('.inputFilesPanel-pathView')
 
     const $inputFilesProgress = $panel.querySelector('.inputFilesPanel-progress')
@@ -45,7 +45,7 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
             
             $$progressIcon.renderFinishedLoading()
     
-            $inputFilesButton.textContent = 'Reiniciar'
+            $inputFilesButton.textContent = 'Abrir outra pasta'
             $inputFilesButton.classList.remove('inputFilesButton--disabled')
             
             $inputFilesPathView.textContent = srcFolder
