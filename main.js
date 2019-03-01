@@ -22,8 +22,9 @@ let restartFlag = false
 
 async function init () {
     app
-    .on('window-all-closed', app.quit)
-    .once('quit', () => console.log('Good Bye! 🎂'))
+        .removeAllListeners()
+        .on('window-all-closed', app.quit)
+        .once('quit', () => console.log('Good Bye! 🎂'))
 
     const cakeWelcomePage = await CakeWelcomePage()
 
@@ -49,6 +50,12 @@ async function init () {
     mainWindow.on('closed', function() {
         mainWindow.removeAllListeners()
         mainWindow = null;
+    })
+
+    app.on('will-quit', event => {
+        if(!event.defaultPrevented) {
+            printLogs(1, '* Quit requested. *', 1)
+        }
     })
 
     const sessionStorageCleanOnQuit = new Promise((resolve, reject) => {
@@ -78,13 +85,11 @@ async function init () {
     })
 
     const cleanupOnQuitPromise = Promise.all([sessionStorageCleanOnQuit, watchersCleanOnQuit])
-
     cleanupOnQuitPromise
         .then(() => {
             if(restartFlag) {
                 printLogs(1, '* Reload cleanup succesfull! Reloading: *', 1)
                 restartFlag = false
-                app.removeAllListeners()
                 return init().then(() => {
                     printLogs(1, '* Reload successfull *', 1)
                 })
@@ -93,12 +98,6 @@ async function init () {
                 app.quit()
             }
         })
-    
-    app.on('will-quit', event => {
-        if(!event.defaultPrevented) {
-            printLogs(1, '* Quit requested. Waiting for cleanup. *', 1)
-        }
-    })
 
     cakeWelcomePage.onReloadRequested(() => {
         restartFlag = true
