@@ -30,6 +30,7 @@
 .inputFilesPanel--loading .inputFilesPanel-btn {
     cursor: not-allowed;
 }
+
 .inputFilesPanel--loading .inputFilesPanel-btn,
 :not(.inputFilesPanel--loading) > .inputFilesPanel-btn:hover:not(:active),
 :not(.inputFilesPanel--loading) > .inputFilesPanel-btn:focus:not(:active) {
@@ -45,9 +46,14 @@
     display: none;
 }
 
-.inputFilesPanel--loading .inputFilesPanel-pathView {
+.inputFilesPanel--loading .inputFilesPanel-pathView, 
+.inputFilesPanel--loading .inputFilesPanel-progress,
+.inputFilesPanel--finishedLoading .inputFilesPanel-pathView, 
+.inputFilesPanel--finishedLoading .inputFilesPanel-progress {
     display: block;
+}
 
+.inputFilesPanel-pathView {
     height: 1.5em;
     margin-top: 1em;
     padding: .2em .5em;
@@ -57,9 +63,8 @@
     background: rgba(202,202,202,.9);
 }
 
-.inputFilesPanel--loading .inputFilesPanel-progress {
-    display: block;
-
+.inputFilesPanel-progress {
     fill: red;
     margin-top: .5em;
+    height: 2em;
 }

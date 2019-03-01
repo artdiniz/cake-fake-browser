@@ -19,7 +19,7 @@ process.on('unhandledRejection', (error, rejectedPromise) => {
 
 async function init () {
 
-    const cakeWelcomePage = CakeWelcomePage()
+    const cakeWelcomePage = await CakeWelcomePage()
 
     const srcDir = await resolveFolderPath({
         promptUserFunction: cakeWelcomePage.getSrcFolder
@@ -43,8 +43,8 @@ async function init () {
     )
 
     mainWindow.on('closed', function() {
-        mainWindow = null;
         mainWindow.removeAllListeners()
+        mainWindow = null;
     })
 
     app.on('will-quit', createCleanupOnEventHandler(

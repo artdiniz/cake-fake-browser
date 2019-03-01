@@ -31,6 +31,8 @@
         "esm": "^3.2.4",
         "execa": "^1.0.0",
         "expand-tilde": "^2.0.2",
+        "express": "^4.16.4",
+        "get-port": "^4.1.0",
         "gulp": "^4.0.0",
         "gulp-debug": "^4.0.0",
         "gulp-filter": "^5.1.0",

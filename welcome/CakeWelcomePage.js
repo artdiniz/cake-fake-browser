@@ -2,11 +2,12 @@ import { CakeWelcomeWindow } from './welcomeWindow/CakeWelcomeWindow'
 
 import { ipcMain } from 'electron'
 
-function createCakeWelcomePage() {
+async function createCakeWelcomePage() {
 
-    const welcomeWindow = CakeWelcomeWindow()
+    const welcomeWindow = await CakeWelcomeWindow()
 
     const getSrcFolder = () => {
+        welcomeWindow.show()
         return new Promise((resolve, reject) => {            
             ipcMain.once('cakeFilesInput', (event, srcDir) => {
                 resolve(srcDir)
@@ -15,9 +16,9 @@ function createCakeWelcomePage() {
     }
 
     const setSrcFolder = srcFolder => {
-        welcomeWindow.webContents.send('cakeFilesSrcFolderSet', srcFolder)
+        welcomeWindow.show()
+        welcomeWindow.webContents.send('cakeFilesSrcFolderLoaded', srcFolder)
     }
-
 
 
     return {
