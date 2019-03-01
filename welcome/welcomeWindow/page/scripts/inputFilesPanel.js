@@ -40,6 +40,10 @@ ipcRenderer.once('cakeFilesSrcFolderLoaded', (event, srcFolder) => {
     })
 })
 
+$$panel.onResetButtonClicked(() => {
+    ipcRenderer.send('cakeFilesInputReload')
+})
+
 $$panel.onInputFilesBtnClicked(() => {
     const isInitialLoad = !state.isLoading && !state.hasFinishedLoading
 

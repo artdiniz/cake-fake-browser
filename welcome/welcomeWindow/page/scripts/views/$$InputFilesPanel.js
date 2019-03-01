@@ -3,6 +3,8 @@ import { $$InputFilesProgressIcon } from "./$$InputFilesProgressIcon"
 export const $$InputFilesPanel = ($panel = document.querySelector()) => {
 
     const $inputFilesButton = $panel.querySelector('.inputFilesPanel-chooseFolderButton')
+    const $resetButton = $panel.querySelector('.inputFilesPanel-resetButton')
+
     const $inputFilesPathView = $panel.querySelector('.inputFilesPanel-pathView')
 
     const $inputFilesProgress = $panel.querySelector('.inputFilesPanel-progress')
@@ -59,6 +61,7 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
         ,renderInitial
         ,onInputFilesBtnClicked: (callback) => $inputFilesButton.addEventListener('click', callback)
         ,onInputFilesBtnFocused: (callback) => $inputFilesButton.addEventListener('focus', callback)
+        ,onResetButtonClicked: (callback) => $resetButton.addEventListener('click', callback)
         ,focusFilePath: () => $inputFilesPathView.focus()
     }
 
