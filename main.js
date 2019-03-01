@@ -85,6 +85,7 @@ async function init () {
     })
 
     const cleanupOnQuitPromise = Promise.all([sessionStorageCleanOnQuit, watchersCleanOnQuit])
+    
     cleanupOnQuitPromise
         .then(() => {
             if(restartFlag) {
