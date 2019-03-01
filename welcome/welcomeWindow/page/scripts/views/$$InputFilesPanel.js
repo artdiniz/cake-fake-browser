@@ -45,7 +45,7 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
             
             $$progressIcon.renderFinishedLoading()
     
-            $inputFilesButton.textContent = 'Selecionar outra pasta'
+            $inputFilesButton.textContent = 'Recarregar'
             $inputFilesButton.classList.remove('inputFilesButton--disabled')
             
             $inputFilesPathView.textContent = srcFolder

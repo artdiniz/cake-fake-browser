@@ -17,12 +17,19 @@ process.on('unhandledRejection', (error, rejectedPromise) => {
     process.exit(1)
 })
 
+let restartFlag = false
+
 async function init () {
 
     const cakeWelcomePage = await CakeWelcomePage()
 
     const srcDir = await resolveFolderPath({
         promptUserFunction: cakeWelcomePage.getSrcFolder
+    })
+
+    cakeWelcomePage.onReloadRequested(() => {
+        restartFlag = true
+        app.quit()
     })
     
     const cakeFiles = await setupCakeFiles({in: srcDir})
@@ -69,12 +76,18 @@ async function init () {
         }
         ,{ whenDone: app.quit }
     ))
-        
-    app.on('will-quit', event => {
-        if(!event.defaultPrevented){
-            console.log('Good Bye! 🎂')
-        }
-    })
 }
+
+app.on('quit', event => {
+    if(restartFlag){
+        event.preventDefault()
+        restartFlag = false
+        init()
+    }
+})
+
+app.on('quit', event => {
+    console.log('Good Bye! 🎂')
+})
 
 app.on('ready', init)

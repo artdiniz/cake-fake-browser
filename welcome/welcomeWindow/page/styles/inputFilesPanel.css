@@ -5,7 +5,8 @@
 
 .inputFilesPanel-instruction {
     margin: 2em 0;
-    width: 25em;
+    max-width: 85%;
+    min-width: 25em;
 
     line-height: 1.5;
 
@@ -81,16 +82,32 @@
 .inputFilesPanel-pathView {
     height: 1.5em;
     line-height: 1.5em;
-    width: 25em;
+    min-width: 70%;
+    max-width: 90%;
     margin: 1em 0 2em;
-    padding: .2em .5em;
+    padding: .2em .75em;
+    position: relative;
 
     font-size: 1.15em;
     font-family: monospace;
 
     background: #454545;
     color: white;
+
+    overflow: scroll;
+    white-space: nowrap;
 }
+
+/* .inputFilesPanel-pathView:after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    height: 100%;
+    width: 4em;
+    background-image: linear-gradient(to right, transparent 10%, rgba(45,45,45,.9));
+    right: 0;
+    top: 0;
+} */
 
 .inputFilesPanel-progress {
     fill: red;

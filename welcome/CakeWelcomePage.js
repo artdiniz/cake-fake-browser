@@ -20,10 +20,19 @@ async function createCakeWelcomePage() {
         welcomeWindow.webContents.send('cakeFilesSrcFolderLoaded', srcFolder)
     }
 
+    const onReloadRequested = (callback) => {
+        ipcMain.once('cakeFilesInputReload', (event) => {
+            callback()
+        })
+    }
+
+
+
 
     return {
         getSrcFolder
         ,setSrcFolder
+        ,onReloadRequested
     }
 }
 

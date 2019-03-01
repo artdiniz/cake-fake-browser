@@ -40,7 +40,7 @@ ipcRenderer.once('cakeFilesSrcFolderLoaded', (event, srcFolder) => {
 })
 
 $$panel.onInputFilesBtnClicked(() => {
-    if(!state.isLoading) {
+    if(!state.isLoading && !state.finishedLoading) {
 
         const previousState = JSON.parse(JSON.stringify(state))
 
@@ -66,6 +66,8 @@ $$panel.onInputFilesBtnClicked(() => {
                 }
             }
         )
+    } else if(state.finishedLoading) {
+        ipcRenderer.send('cakeFilesInputReload')
     }
 })
 
