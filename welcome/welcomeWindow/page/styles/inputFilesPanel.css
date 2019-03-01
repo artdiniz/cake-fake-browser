@@ -12,34 +12,59 @@
     text-align: center;
 }
 
+.inputFilesPanel--loading .inputFilesPanel-instruction, 
+.inputFilesPanel--loading .inputFilesPanel-instruction,
+.inputFilesPanel--finishedLoading .inputFilesPanel-instruction, 
+.inputFilesPanel--finishedLoading .inputFilesPanel-instruction {
+    display: none;
+}
+
 .inputFilesPanel-btn {
     padding: 1em 2em;
+    min-width: 17.5em;
+
+    transform: scale(1);
+
+    position: relative;
+    z-index: 1;
+
+    box-sizing: border-box;
 
     font-size: 1em;
-
+    font-weight: bold;
     text-transform: uppercase;
-    color: rgba(255,255,255,.9);
 
-    cursor: pointer;
-
-    border: none;
     border-radius: 2em;
-    background-color: rgb(51, 109, 119);
+    border: 3px solid transparent;
+    background-color: rgba(201, 0, 0, 0.47);
+    color: white;
+    
+    transition: background-color .35s ease, color .2s ease, transform .35s ease;
 }
+
+.inputFilesPanel--loading .inputFilesPanel-btn,
+:not(.inputFilesPanel--loading) > .inputFilesPanel-btn:hover,
+:not(.inputFilesPanel--loading) > .inputFilesPanel-btn:focus {
+    border-color: currentColor;
+    color: rgba(201, 0, 0, 0.47);
+
+    background-color: rgba(0,0,0,0);
+    
+    transition: background-color .5s ease, color .2s ease, transform .35s ease;
+    cursor: pointer;
+}
+
+.inputFilesPanel-btn:active {
+    outline: none;
+    transform: scale(0.75);
+
+    transition: transform 1s ease;
+}
+
 
 .inputFilesPanel--loading .inputFilesPanel-btn {
     cursor: not-allowed;
 }
-
-.inputFilesPanel--loading .inputFilesPanel-btn,
-:not(.inputFilesPanel--loading) > .inputFilesPanel-btn:hover:not(:active),
-:not(.inputFilesPanel--loading) > .inputFilesPanel-btn:focus:not(:active) {
-    background-image: linear-gradient(
-        rgba(255,255,255,.1)
-        ,rgba(255,255,255,.1)
-    )
-}
-
 
 .inputFilesPanel-progress,
 .inputFilesPanel-pathView {
@@ -55,16 +80,20 @@
 
 .inputFilesPanel-pathView {
     height: 1.5em;
-    margin-top: 1em;
+    line-height: 1.5em;
+    width: 25em;
+    margin: 1em 0 2em;
     padding: .2em .5em;
 
-    line-height: 1.5em;
+    font-size: 1.15em;
+    font-family: monospace;
 
-    background: rgba(202,202,202,.9);
+    background: #454545;
+    color: white;
 }
 
 .inputFilesPanel-progress {
     fill: red;
-    margin-top: .5em;
+    margin: 1em 0;
     height: 2em;
 }

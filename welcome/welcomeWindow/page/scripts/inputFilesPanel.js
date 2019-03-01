@@ -1,42 +1,77 @@
-(($$InputFilesPanel) => {
+import { remote, ipcRenderer } from 'electron'
+import { $$InputFilesPanel } from './views/$$InputFilesPanel'
 
-    const $$panel = $$InputFilesPanel(document.querySelector('.inputFilesPanel'))
+const state =  {
+    isLoading: false
+    ,srcFolder: ''
+    ,finishedLoading: false
+}
 
-    const state = $$panel.getDefaultRenderProps()
+const $$panel = $$InputFilesPanel(document.querySelector('.inputFilesPanel'))
 
-    const { remote, ipcRenderer } = require('electron')
+const render = () => {
+    if(state.isLoading && !state.finishedLoading) {
+        $$panel.renderIsLoading({
+            srcFolder: state.srcFolder
+        })
+    } else if(state.finishedLoading){
+        $$panel.renderFinishedLoading({
+            srcFolder: state.srcFolder
+        })
+    } else if(!state.isLoading && !state.finishedLoading) {
+        $$panel.renderInitial()
+    }
+}
 
-    ipcRenderer.once('cakeFilesSrcFolderLoaded', (event, srcFolder) => {
-        state.srcFolder = srcFolder
-        state.isLoading = false
-        state.finishedLoading = true
+const setState = (newState = state) => {
+    Object.assign(state, newState)
+    sessionStorage.setItem('$$panel-state', JSON.stringify(state))
+    render(newState)
+}
 
-        $$panel.render(state)
+setState(JSON.parse(sessionStorage.getItem('$$panel-state')) || state)
+
+ipcRenderer.once('cakeFilesSrcFolderLoaded', (event, srcFolder) => {
+    setState({
+        srcFolder: srcFolder
+        ,isLoading: false
+        ,finishedLoading: true
     })
+})
 
-    $$panel.onInputFilesBtnClicked(() => {
-        if(!state.isLoading) {
+$$panel.onInputFilesBtnClicked(() => {
+    if(!state.isLoading) {
+
+        const previousState = JSON.parse(JSON.stringify(state))
+
+        setState({
+            isLoading: true
+            ,finishedLoading: false
+            ,srcFolder: 'selecione uma pasta'
+        })
+
+        remote.dialog.showOpenDialog(
+            {
+                properties: ['openDirectory', 'createDirectory']
+            }
+            ,(paths) => {
+                if(paths) {
+                    setState({
+                        srcFolder: paths[0]
+                    })
             
-            state.isLoading = true
-            state.finishedLoading = false
+                    ipcRenderer.send('cakeFilesInput', state.srcFolder)
+                } else {
+                    setState(previousState)
+                }
+            }
+        )
+    }
+})
 
-            $$panel.render(state)
-            
-            state.srcFolder = remote.dialog.showOpenDialog({
-                properties: ['openDirectory']
-            })[0]
-
-            $$panel.render(state)
-
-            ipcRenderer.send('cakeFilesInput', state.srcFolder)
-        }
-    })
-
-    $$panel.onInputFilesBtnFocused((event) => {
-        if(state.isLoading) {
-            event.preventDefault()
-        }
-    })
-
-
-})($$InputFilesPanel)
+$$panel.onInputFilesBtnFocused((event) => {
+    if(state.isLoading) {
+        event.preventDefault()
+        $$panel.focusFilePath()
+    }
+})
