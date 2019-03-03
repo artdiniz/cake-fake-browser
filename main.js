@@ -36,7 +36,7 @@ async function init ({args = process.argv.slice(2)}) {
     const cakeFiles = await setupCakeFiles({in: srcDir})
 
     let mainWindow = CakeBrowserWindow({
-        getIndexFilePathFn: cakeFiles.getIndexPath
+        getCakeBrowserURLFn: cakeFiles.getIndexFileURL
     })
 
     const session = (

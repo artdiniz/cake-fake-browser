@@ -110,7 +110,7 @@ export const setupCakeFiles = async function ({in: srcDir}) {
     })
 
     return {
-        getIndexPath: function getIndexPath({withOpenURL: openURL} = {}) {
+        getIndexFileURL: function getIndexFileURL({withOpenURL: openURL} = {}) {
             let indexFile
     
             if(openURL !== undefined && openURL !== null) {
@@ -119,7 +119,7 @@ export const setupCakeFiles = async function ({in: srcDir}) {
                 indexFile = cakeIndexFileBuilder.withOpenURL()
             }
     
-            return indexFile.name
+            return 'file://' + indexFile.name
         }
         
         ,cleanup: () => [

@@ -1,14 +1,14 @@
 import {GenericBrowserWindow} from './GenericBrowserWindow'
 
 
-function createCakeBrowserWindow(getIndexFilePath) {
+function createCakeBrowserWindow(getCakeBrowserURL) {
     let cakeBrowserWindow = GenericBrowserWindow({
         title: "Caelum Cake Browser"
     })
 
-    Promise.resolve(getIndexFilePath())
-        .then(indexPath => {
-            cakeBrowserWindow.loadURL('file://' + indexPath)
+    Promise.resolve(getCakeBrowserURL())
+        .then(cakeBrowserURL => {
+            cakeBrowserWindow.loadURL(cakeBrowserURL)
             cakeBrowserWindow.once('ready-to-show', () => cakeBrowserWindow.show())
         })
     
@@ -19,7 +19,7 @@ function createCakeBrowserWindow(getIndexFilePath) {
 
     cakeBrowserWindow.webContents.on('new-window', async (event, newWindowURL, frameName, disposition, options, additionalFeatures) => {
         event.preventDefault()
-        let win = await createCakeBrowserWindow(({withOpenURL: otherURL} = {}) => getIndexFilePath({
+        let win = await createCakeBrowserWindow(({withOpenURL: otherURL} = {}) => getCakeBrowserURL({
             withOpenURL: otherURL || newWindowURL
         }))
         event.newGuest = win
@@ -33,4 +33,4 @@ function createCakeBrowserWindow(getIndexFilePath) {
 }
 
 
-export const CakeBrowserWindow = ({getIndexFilePathFn}) => createCakeBrowserWindow(getIndexFilePathFn)
+export const CakeBrowserWindow = ({getCakeBrowserURLFn}) => createCakeBrowserWindow(getCakeBrowserURLFn)
