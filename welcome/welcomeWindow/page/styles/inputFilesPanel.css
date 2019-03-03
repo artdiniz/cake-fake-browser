@@ -37,45 +37,82 @@
 
     border-radius: 2em;
     border: 3px solid transparent;
-    background-color: rgba(201, 0, 0, 0.47);
     color: white;
     
     transition: background-color .35s ease, color .2s ease, transform .35s ease;
+}
+
+.inputFilesPanel-button:hover:not(.inputFilesButton--disabled),
+.inputFilesPanel-button:focus:not(.inputFilesButton--disabled) {
+    cursor: pointer;
 }
 
 .inputFilesPanel-button + .inputFilesPanel-button {
     margin-top: 1em;
 }
 
-.inputFilesPanel--loading .inputFilesButton--disabled,
-:not(.inputFilesPanel--loading) > .inputFilesPanel-button:hover,
-:not(.inputFilesPanel--loading) > .inputFilesPanel-button:focus {
-    border-color: currentColor;
-    color: rgba(201, 0, 0, 0.47);
-
-    background-color: rgba(0,0,0,0);
-    
-    transition: background-color .5s ease, color .2s ease, transform .35s ease;
-    cursor: pointer;
-}
-
-.inputFilesPanel-button:active {
-    outline: none;
-    transform: scale(0.75);
-
-    transition: transform 1s ease;
-}
-
-.inputFilesPanel--loading .inputFilesPanel-button {
-    cursor: not-allowed;
-}
-
-.inputFilesPanel-progress,
-.inputFilesPanel-pathView {
+.inputFilesPanel--initial .inputFilesPanel-resetButton {
     display: none;
 }
 
-.inputFilesPanel--loading .inputFilesPanel-pathView, 
+.inputFilesPanel-button:hover,
+.inputFilesPanel-button:focus,
+.inputFilesPanel--loading .inputFilesButton--disabled {
+    border-color: currentColor;
+    background-color: rgba(0,0,0,0);
+    transition: background-color .5s ease, color .2s ease, transform .35s ease;
+}
+
+.inputFilesPanel-button:active:not(.inputFilesButton--disabled) {
+    outline: none;
+    transform: scale(0.75);
+    transition: transform 1s ease;
+}
+
+.inputFilesButton--disabled {
+    color: rgba(0,0,0,.19);
+    cursor: not-allowed;
+}
+
+.inputFilesButton--disabled:focus {
+    outline: none;
+}
+
+.inputFilesPanel-chooseFolderButton {
+    /* background-color: #c2c4b0; */
+    /* background-color: #f5ae09; */
+    background-color: rgb(197, 95, 95);
+
+}
+
+.inputFilesPanel--initial .inputFilesPanel-chooseFolderButton:not(:hover):not(:focus),
+.inputFilesPanel-resetButton {
+    background-color: rgba(201, 0, 0, 0.47);
+    
+
+}
+
+.inputFilesPanel-chooseFolderButton:hover:not(.inputFilesButton--disabled),
+.inputFilesPanel-chooseFolderButton:focus:not(.inputFilesButton--disabled) {
+    /* color: rgb(230, 174, 105); */
+    /* color: #eeb946 */
+    color: rgb(197, 95, 95);
+}
+
+
+.inputFilesPanel--initial .inputFilesPanel-chooseFolderButton:hover,
+.inputFilesPanel--initial .inputFilesPanel-chooseFolderButton:focus,
+.inputFilesPanel-resetButton:hover:not(.inputFilesButton--disabled),
+.inputFilesPanel-resetButton:focus:not(.inputFilesButton--disabled) {
+    color: rgba(201, 0, 0, 0.47);
+}
+
+.inputFilesPanel-progress,
+.inputFilesPanel-pathContainer {
+    display: none;
+}
+
+.inputFilesPanel--loading .inputFilesPanel-pathViewContainer, 
 .inputFilesPanel--loading .inputFilesPanel-progress,
 .inputFilesPanel--finishedLoading .inputFilesPanel-pathView, 
 .inputFilesPanel--finishedLoading .inputFilesPanel-progress {
@@ -83,38 +120,24 @@
 }
 
 .inputFilesPanel-pathView {
-    height: 1.5em;
-    line-height: 1.5em;
+    display: none;
+
+    min-height: 1.5em;
     min-width: 70%;
     max-width: 90%;
     margin: 1em 0 2em;
     padding: .2em .75em;
     position: relative;
-
+    
+    line-height: 1.5em;
     font-size: 1.15em;
     font-family: monospace;
 
     background: #454545;
     color: white;
 
-    overflow: scroll;
-    white-space: nowrap;
+    overflow: auto;
 }
-
-.inputFilesPanel--initial .inputFilesPanel-resetButton {
-    display: none;
-}
-
-/* .inputFilesPanel-pathView:after {
-    content: '';
-    display: inline-block;
-    position: absolute;
-    height: 100%;
-    width: 4em;
-    background-image: linear-gradient(to right, transparent 10%, rgba(45,45,45,.9));
-    right: 0;
-    top: 0;
-} */
 
 .inputFilesPanel-progress {
     fill: red;

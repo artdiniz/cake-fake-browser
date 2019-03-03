@@ -11,6 +11,13 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
     
     const $$progressIcon = $$InputFilesProgressIcon($inputFilesProgress)
 
+    const renderPath = path => {
+        return path
+            .split('/')
+            .map(path => `<span class="inputFilesPanel-pathView-pathPortion">${path}</span>`)
+            .join('<span class="inputFilesPanel-pathView-pathDivision">/</span>')
+    }
+
     const renderInitial = (() => {
         const buttonInitialContent = $inputFilesButton.textContent
 
@@ -19,8 +26,11 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
                 $panel.classList.remove('inputFilesPanel--loading')
                 $panel.classList.remove('inputFilesPanel--loading')
                 $panel.classList.add('inputFilesPanel--initial')
+
+                $inputFilesButton.classList.remove('inputFilesButton--disabled')
                 
                 $inputFilesButton.textContent = buttonInitialContent
+                $inputFilesButton.blur()
             })
         }
     })()
@@ -38,7 +48,9 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
             
             $inputFilesButton.classList.add('inputFilesButton--disabled')
             
-            $inputFilesPathView.textContent = srcFolder
+            $inputFilesPathView.innerHTML = renderPath(srcFolder)
+
+            srcFolder.split('/').map(path => `<span class="pathPortion">${path}</span>`).join('<span>/</span>')
             $inputFilesPathView.focus()
         })
     }
@@ -54,8 +66,8 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
             $inputFilesButton.textContent = 'Abrir outra pasta'
             $inputFilesButton.classList.remove('inputFilesButton--disabled')
             
-            $inputFilesPathView.textContent = srcFolder
-            $panel.focus()
+            $inputFilesPathView.innerHTML = renderPath(srcFolder)
+            $inputFilesPathView.focus()
         })
     }
 
