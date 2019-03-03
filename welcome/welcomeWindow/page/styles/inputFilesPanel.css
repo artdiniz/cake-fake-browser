@@ -108,11 +108,11 @@
 }
 
 .inputFilesPanel-progress,
-.inputFilesPanel-pathContainer {
+.inputFilesPanel-pathView {
     display: none;
 }
 
-.inputFilesPanel--loading .inputFilesPanel-pathViewContainer, 
+.inputFilesPanel--loading .inputFilesPanel-pathView, 
 .inputFilesPanel--loading .inputFilesPanel-progress,
 .inputFilesPanel--finishedLoading .inputFilesPanel-pathView, 
 .inputFilesPanel--finishedLoading .inputFilesPanel-progress {
