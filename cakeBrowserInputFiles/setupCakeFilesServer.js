@@ -78,11 +78,12 @@ export const setupCakeFilesServer = async ({in: srcDir}) => {
     }))
 
     expressHandler.use((req,resp) => {
-        serverEmitter.emit('error', 'Not found: ' + req.originalUrl)
+        resp.status(404).send('Not found: ' + req.originalUrl)
     })
 
     expressHandler.use((error, req, resp, next) => {
         serverEmitter.emit('error', error)
+        resp.status(500).send(error)
     })
 
     const server = stoppable(
@@ -90,7 +91,6 @@ export const setupCakeFilesServer = async ({in: srcDir}) => {
     )
 
     const stopServerAsync = promisify(server.stop)
-
     
     const serverIsUpPromise = new Promise(async (resolve, reject) => {        
         const port = await getPort({port: 3000})
