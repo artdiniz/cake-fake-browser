@@ -15,9 +15,14 @@ async function createCakeWelcomePage() {
         })
     }
 
-    const setSrcFolder = srcFolder => {
+    const setLoaded = srcFolder => {
         welcomeWindow.show()
         welcomeWindow.webContents.send('cakeFilesSrcFolderLoaded', srcFolder)
+    }
+
+    const setLoading = srcFolder => {
+        welcomeWindow.show()
+        welcomeWindow.webContents.send('cakeFilesSrcFolderLoading', srcFolder)
     }
 
     const onReloadRequested = (callback) => {
@@ -29,7 +34,8 @@ async function createCakeWelcomePage() {
 
     return {
         getSrcFolder
-        ,setSrcFolder
+        ,setLoaded: setLoaded
+        ,setLoading: setLoading
         ,onReloadRequested
     }
 }

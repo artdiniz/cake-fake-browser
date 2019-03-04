@@ -32,6 +32,14 @@ const setState = (newState = state) => {
 
 setState(JSON.parse(sessionStorage.getItem('$$panel-state')) || state)
 
+ipcRenderer.once('cakeFilesSrcFolderLoading', (event, srcFolder) => {
+    setState({
+        srcFolder: srcFolder
+        ,isLoading: true
+        ,hasFinishedLoading: false
+    })
+})
+
 ipcRenderer.once('cakeFilesSrcFolderLoaded', (event, srcFolder) => {
     setState({
         srcFolder: srcFolder

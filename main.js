@@ -32,6 +32,8 @@ async function init ({args = process.argv.slice(2)}) {
         appArguments: args
         ,promptUserFunction: cakeWelcomePage.getSrcFolder
     })
+
+    cakeWelcomePage.setLoading(srcDir)
     
     const cakeFilesServer = await setupCakeFilesServer({in: srcDir})
 
@@ -118,7 +120,7 @@ async function init ({args = process.argv.slice(2)}) {
         app.quit()
     })
 
-    cakeWelcomePage.setSrcFolder(srcDir)
+    cakeWelcomePage.setLoaded(srcDir)
 }
 
 app.on('ready', init)
