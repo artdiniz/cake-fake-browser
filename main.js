@@ -6,7 +6,7 @@ import { AmnesicSession } from './session/AmnesicSession'
 import {app} from 'electron'
 
 import { CakeBrowserWindow } from './window/CakeBrowserWindow'
-import { resolveFolderPath, setupCakeFiles } from './cakeBrowserInputFiles'
+import { resolveFolderPath, setupCakeFilesServer } from './cakeBrowserInputFiles'
 import { createCleanupOnEventHandler } from './util/createCleanupOnEventHandler'
 
 import { CakeWelcomePage } from './welcome/CakeWelcomePage'
@@ -33,20 +33,18 @@ async function init ({args = process.argv.slice(2)}) {
         ,promptUserFunction: cakeWelcomePage.getSrcFolder
     })
     
-    const cakeFiles = await setupCakeFiles({in: srcDir})
+    const cakeFilesServer = await setupCakeFilesServer({in: srcDir})
 
     let mainWindow = CakeBrowserWindow({
-        getCakeBrowserURLFn: cakeFiles.getIndexFileURL
+        getCakeBrowserURLFn: cakeFilesServer.getIndexFileURL
     })
 
-    const session = (
-        AmnesicSession(
-        WithDisabledResponseHeaders(['Access-Control-Allow-Origin', 'X-Frame-Options'],
-        WithDisabledContentSecurityPolicy(['frame-ancestors', 'frame-src', 'default-src'],
-        InterceptableResponseSession(
-            mainWindow.webContents.session
-        ))))
-    )
+    const session = AmnesicSession(
+                    WithDisabledResponseHeaders(['Access-Control-Allow-Origin', 'X-Frame-Options'],
+                    WithDisabledContentSecurityPolicy(['frame-ancestors', 'frame-src', 'default-src'],
+                    InterceptableResponseSession(
+                        mainWindow.webContents.session
+                    ))))
 
     mainWindow.on('closed', function() {
         mainWindow.removeAllListeners()
@@ -74,11 +72,20 @@ async function init ({args = process.argv.slice(2)}) {
 
     const watchersCleanOnQuit = new Promise((resolve, reject) => {
         app.on('will-quit', createCleanupOnEventHandler(
-            function cleanCakeFilesWatcher(event, cleanupLogger){ 
-                const cleanedWatchers = cakeFiles.cleanup()
-                cleanupLogger.log(
-                    ...cleanedWatchers.map(watcher => `Closed ${watcher}`)
-                )
+            async function destroyCakeFilesServer(event, cleanupLogger){ 
+                const {clearedWatchers, serverShutdownWasGracefull} = await cakeFilesServer.cleanup()
+                
+                cleanupLogger.log(...[
+                    `Closed cake files server ${
+                        serverShutdownWasGracefull 
+                            ? 'gracefully' 
+                            : 'with a piano in the head'
+                    }`
+                    ,...clearedWatchers.map(([watcher, wasClosed]) => wasClosed
+                        ? `Closed ${watcher}`
+                        : `Couldn't close src dir watchers`
+                    )
+                ])
             },{ 
                 whenDone: () => resolve()
             }
