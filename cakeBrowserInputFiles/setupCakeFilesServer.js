@@ -116,7 +116,8 @@ export const setupCakeFilesServer = async ({in: srcDir}) => {
         getIndexFileURL: ({withOpenURL: openURL} = {}) => cakeURLWithIframeSrc(openURL)
         ,cleanup: async () => {
             const serverShutdownWasGracefull = await stopServerAsync()
-            const closedSrcDirWatcher = srcFilesWatcher.clear() 
+            serverEmitter.removeAllListeners()
+            const closedSrcDirWatcher = srcFilesWatcher.clear()
             
             return {
                 serverShutdownWasGracefull                
