@@ -1,127 +1,22 @@
+import { app } from 'electron'
+
 import { WithDisabledContentSecurityPolicy } from './session/WithDisabledContentSecurityPolicy'
 import { WithDisabledResponseHeaders } from './session/WithDisabledResponseHeaders'
 import { InterceptableResponseSession } from './session/InterceptableResponseSession'
 import { AmnesicSession } from './session/AmnesicSession'
 
-import {app} from 'electron'
-import once from 'once'
-
-import { CakeBrowserWindow } from './window/CakeBrowserWindow'
-import { resolveFolderPath, setupCakeFilesServer } from './cakeBrowserInputFiles'
-
-import { CakeWelcomePage } from './welcome/CakeWelcomePage'
+import { RestartableApp } from './util/RestartableApp'
 import { printLogs } from './util/printLogs'
-
-import { createCleanupOnEventHandler } from './util/createCleanupOnEventHandler'
+import { CakeWelcomePage } from './welcome/CakeWelcomePage'
+import { resolveFolderPath, setupCakeFilesServer } from './cakeBrowserInputFiles'
+import { CakeBrowserWindow } from './window/CakeBrowserWindow'
 
 process.on('unhandledRejection', (error, rejectedPromise) => {
     console.error('Unhandled Rejection at:', rejectedPromise, 'reason:', error);
     process.exit(1)
 })
 
-
-function CakeApp(app) {
-    let cleanupTasks = []
-    let beforeQuitCleanupHandlers = []
-    let afterQuitCleanupHandlers = []
-
-    const addCleanupTask = task => cleanupTasks.push(task)
-    const onWillQuitBeforeCleanup = callback => beforeQuitCleanupHandlers.push(callback)
-    const onWillQuitAfterCleanup = callback => afterQuitCleanupHandlers.push(callback)
-
-    const {start, resetFunction: _resetFunction} = (() => {
-        let wasInitiated = false
-        let initFunction = () => Promise.reject(`App wasn't initiated. No init function provided`)
-
-        const withInitialSetup = (fn) => (...args) => {
-            cleanupTasks = []
-            beforeQuitCleanupHandlers = []
-            afterQuitCleanupHandlers = []
-            
-            app
-                .removeAllListeners()
-                .on('window-all-closed', app.quit)
-                .on('will-quit', quitWithCleanup)
-
-            fn(...args)
-        }
-    
-        return {
-            start: (startCallback) => {
-                if(!wasInitiated){
-                    wasInitiated = true
-                    initFunction = withInitialSetup(startCallback)
-                    app.on('ready', initFunction)
-                } else {
-                    throw new Error('App was already initiated.')
-                }
-            }
-            ,resetFunction: (...args) => initFunction(...args)
-        }
-    })()
-
-    const quitWithCleanup = (event) => {
-        event.preventDefault()
-        app.removeAllListeners('will-quit')
-
-        beforeQuitCleanupHandlers.forEach(handler => 
-            app.on('will-quit', once(handler))
-        )
-
-        cleanupTasks.forEach(task =>
-            app.on('will-quit', createCleanupOnEventHandler(
-                task, 
-                { whenDone: app.quit }
-            ))
-        )
-
-        afterQuitCleanupHandlers
-            .forEach(handler => 
-                app.on('will-quit', (event) => {
-                    if(!event.defaultPrevented) {
-                        handler(event)
-                    }
-                })
-            )
-        
-        setImmediate(app.quit)
-    }
-
-    const reset = (...args) => {
-        printLogs(1, '* Waiting clean up before reset! *', 1)
-        const cleanupPromise = Promise.all(
-            cleanupTasks.map(task => new Promise((resolve, reject) => {
-                createCleanupOnEventHandler(task, {
-                    whenDone: () => resolve()
-                })({preventDefault: () => {
-                    console.log('tirar isso daqui')
-                }})
-            }))
-        )
-        
-        return cleanupPromise
-            .then(() => {
-                app.removeAllListeners()
-                app.once('will-quit', event => {
-                    event.preventDefault()
-                    printLogs(1, '* Cleanup succesfull! Proceeding with reset. *', 1)
-                    _resetFunction(...args)
-                })
-
-                app.quit()
-            })
-    }
-
-    return {
-        addCleanupTask: addCleanupTask
-        ,onWillQuitBeforeCleanup: onWillQuitBeforeCleanup
-        ,onWillQuitAfterCleanup: onWillQuitAfterCleanup
-        ,reset: reset
-        ,start: start
-    }
-}
-
-const cakeApp = CakeApp(app)
+const cakeApp = RestartableApp(app)
 
 async function init ({args = process.argv.slice(2)}) {
 
@@ -134,7 +29,7 @@ async function init ({args = process.argv.slice(2)}) {
     cakeWelcomePage.onReloadRequested(newSrcFolder => {
         printLogs(1, '* Reload requested *', 1)
         cakeApp
-            .reset({args: [newSrcFolder, ...process.argv.slice(3)]})
+            .restart({args: [newSrcFolder, ...process.argv.slice(3)]})
             .then(() => {
                 printLogs(1, '* Reload successfull *', 1)
             })
