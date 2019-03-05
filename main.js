@@ -1,4 +1,5 @@
 import { app } from 'electron'
+import { stripIndent } from 'common-tags'
 
 import { WithDisabledContentSecurityPolicy } from './session/WithDisabledContentSecurityPolicy'
 import { WithDisabledResponseHeaders } from './session/WithDisabledResponseHeaders'
@@ -43,6 +44,17 @@ async function init ({args = process.argv.slice(2)}) {
     cakeWelcomePage.setLoading(srcDir)
     
     const cakeFilesServer = await setupCakeFilesServer({in: srcDir})
+
+    cakeFilesServer.onError(error => {
+        printLogs(
+            1
+            ,stripIndent`
+                Error on cake files server: 
+                    ${error}
+            ` 
+            ,1
+        )
+    })
 
     let mainWindow = CakeBrowserWindow({
         getCakeBrowserURLFn: cakeFilesServer.getIndexFileURL

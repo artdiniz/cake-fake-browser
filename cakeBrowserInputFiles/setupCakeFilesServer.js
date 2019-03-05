@@ -83,7 +83,7 @@ export const setupCakeFilesServer = async ({in: srcDir}) => {
 
     expressHandler.use((error, req, resp, next) => {
         serverEmitter.emit('error', error)
-        resp.status(500).send(error)
+        resp.status(500).send(JSON.stringify(error))
     })
 
     const server = stoppable(
@@ -126,6 +126,7 @@ export const setupCakeFilesServer = async ({in: srcDir}) => {
                 ]
             }
         }
+        ,onError: callback => serverEmitter.on('error', callback)
     }
 
 }
