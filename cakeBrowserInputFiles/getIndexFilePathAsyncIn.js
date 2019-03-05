@@ -13,11 +13,12 @@ export const getIndexFilePathAsyncIn = function (folderPath) {
         printLogs(1
             , stripIndent`
                 Looking in ${chalk.grey(folderPath)} for ${fileNamesWithExtension.length > 1 ? 'files' : 'file'}:
-
-                    ${fileNamesWithExtension
-                .map(name => chalk.cyan(name))
-                .map(name => `${name}`)
-                .join(' or ')}
+                    ${
+                        fileNamesWithExtension
+                            .map(name => chalk.cyan(name))
+                            .map(name => `${name}`)
+                            .join(' or ')
+                    }
             `
             , 1)
 

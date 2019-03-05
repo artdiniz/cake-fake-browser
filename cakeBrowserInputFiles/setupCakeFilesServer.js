@@ -16,8 +16,8 @@ import { getIndexFilePathAsyncIn } from './getIndexFilePathAsyncIn';
 
 import stoppable from 'stoppable'
 
-const getContent = memoize((indexFilePath, iframeSRC) => {
-    printLogs(1, '[Index file server] Creating index content with open URL: ', chalk.cyan(iframeSRC))
+const getIndexContent = memoize((indexFilePath, iframeSRC) => {
+    printLogs(1, '[Index file server] Creating index content with open URL: ' +  chalk.cyan(iframeSRC))
 
     const indexContent = fs.readFileSync(indexFilePath)
 
@@ -58,8 +58,8 @@ export const setupCakeFilesServer = async ({in: srcDir}) => {
     const indexFilePath = await getIndexFilePathAsyncIn(srcDir)
 
     const indexFileWatcher = setFileSystemWatcher(indexFilePath, (eventName) => {
-        printLogs(`[Update index][${eventName}]: `, chalk.cyan(chalk.underline(indexFilePath)), 2)
-        getContent.clear()
+        printLogs(`[Update index][${eventName}]: ${chalk.cyan(chalk.underline(indexFilePath))}`, 2)
+        getIndexContent.clear()
     })
     
     const serverEmitter = new EventEmitter()
@@ -70,7 +70,7 @@ export const setupCakeFilesServer = async ({in: srcDir}) => {
     
     expressHandler.get('/', (req, resp) => {
         const iframeSrc = req.query[iframeSrcParameterName]
-        resp.send(getContent(indexFilePath, iframeSrc))
+        resp.send(getIndexContent(indexFilePath, iframeSrc))
     })
 
     expressHandler.use(express.static(srcDir, {
