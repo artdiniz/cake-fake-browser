@@ -84,37 +84,49 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
         return tpl.children[0]
     })()
 
-    const renderReloadButton = ({enabled}) => {
+    
+    const renderReloadButton = (() => {
         const highlightSrc = () => {
             $srcFolderPathView.classList.add('inputFilesPanel-pathView--highlightReload')
         }
-
+    
         const removeHiglighSrc = () => {
             $srcFolderPathView.classList.remove('inputFilesPanel-pathView--highlightReload')
         }
 
-        if(enabled) {
-            $inputFilesProgress.classList.add('inputFilesPanel-reloadCurrentButton')
-            $inputFilesProgress.setAttribute('tabindex', 0)
-            $inputFilesProgress.appendChild($reloadBtnDescription)
-
-            $inputFilesProgress.addEventListener('focus', highlightSrc)
-            $inputFilesProgress.addEventListener('blur', removeHiglighSrc)
-            $inputFilesProgress.addEventListener('mouseover', highlightSrc)
-            $inputFilesProgress.addEventListener('mouseleave', removeHiglighSrc)
-
-
-        } else {
-            $inputFilesProgress.classList.remove('inputFilesPanel--reloadCurrentButton')
-            $inputFilesProgress.setAttribute('tabindex', -1)
-            $reloadBtnDescription.remove()
-
-            $inputFilesProgress.removeEventListener('focus', highlightSrc)
-            $inputFilesProgress.removeEventListener('blur', removeHiglighSrc)
-            $inputFilesProgress.removeEventListener('mouseover', highlightSrc)
-            $inputFilesProgress.removeEventListener('mouseleave', removeHiglighSrc)
+        const enableKeyboardClick = (event) => {
+            if(event.key == 'Enter') {
+                event.target.click()
+            }
         }
-    }
+        
+        return ({enabled}) => {
+
+            if(enabled) {
+                $inputFilesProgress.classList.add('inputFilesPanel-reloadCurrentButton')
+                $inputFilesProgress.setAttribute('tabindex', 0)
+                $inputFilesProgress.appendChild($reloadBtnDescription)
+    
+                $inputFilesProgress.addEventListener('keyup', enableKeyboardClick)
+                $inputFilesProgress.addEventListener('focus', highlightSrc)
+                $inputFilesProgress.addEventListener('blur', removeHiglighSrc)
+                $inputFilesProgress.addEventListener('mouseover', highlightSrc)
+                $inputFilesProgress.addEventListener('mouseleave', removeHiglighSrc)
+    
+    
+            } else {
+                $inputFilesProgress.classList.remove('inputFilesPanel--reloadCurrentButton')
+                $inputFilesProgress.setAttribute('tabindex', -1)
+                $reloadBtnDescription.remove()
+    
+                $inputFilesProgress.removeEventListener('keyup  ', enableKeyboardClick)
+                $inputFilesProgress.removeEventListener('focus', highlightSrc)
+                $inputFilesProgress.removeEventListener('blur', removeHiglighSrc)
+                $inputFilesProgress.removeEventListener('mouseover', highlightSrc)
+                $inputFilesProgress.removeEventListener('mouseleave', removeHiglighSrc)
+            }
+        }
+    })()
 
     return {
         renderFinishedLoading
