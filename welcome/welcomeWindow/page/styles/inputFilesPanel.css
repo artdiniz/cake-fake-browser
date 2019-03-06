@@ -82,14 +82,11 @@
     /* background-color: #c2c4b0; */
     /* background-color: #f5ae09; */
     background-color: rgb(197, 95, 95);
-
 }
 
 .inputFilesPanel--initial .inputFilesPanel-chooseFolderButton:not(:hover):not(:focus),
 .inputFilesPanel-resetButton {
     background-color: rgba(201, 0, 0, 0.47);
-    
-
 }
 
 .inputFilesPanel-chooseFolderButton:hover:not(.inputFilesButton--disabled),
@@ -98,7 +95,6 @@
     /* color: #eeb946 */
     color: rgb(197, 95, 95);
 }
-
 
 .inputFilesPanel--initial .inputFilesPanel-chooseFolderButton:hover,
 .inputFilesPanel--initial .inputFilesPanel-chooseFolderButton:focus,
@@ -140,7 +136,96 @@
 }
 
 .inputFilesPanel-progress {
-    fill: red;
     margin: 1em 0;
+    text-align: center;
+}
+
+.inputFilesPanel-progressIcon {
+    fill: red;
     height: 2em;
+    width: 4.67em;
+}
+
+.inputFilesPanel-reloadCurrentButton {
+    position: relative;
+}
+
+.inputFilesPanel-reloadCurrentButton:hover {
+    cursor: pointer;
+}
+
+.inputFilesPanel-reloadCurrentButton .inputFilesPanel-progressIcon {
+    transform: translateY(0) scale(1);
+    transition: transform .35s ease, fill 1s ease;
+}
+
+.inputFilesPanel-reloadCurrentButton:hover .inputFilesPanel-progressIcon,
+.inputFilesPanel-reloadCurrentButton:focus .inputFilesPanel-progressIcon {
+    transform: translateY(-.3em) scale(1.25);
+    transition: transform .75s ease, fill .75s .2s ease;
+    fill: #eeb946
+}
+
+.inputFilesPanel-reloadCurrentButton:active {
+    outline: none;
+    transform: scale(1.25);
+    cursor: pointer;
+    transition: transform .65s ease;
+}
+
+.inputFilesPanel-reloadCurrentButtonText {
+    display: block;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: all;
+    font-size: .8em;
+    opacity: 1;
+    transition: opacity .35s ease, transform .55s ease, color .75s .2s ease;
+
+    font-family: Helvetica, Arial, sans-serif;
+    text-transform: lowercase;
+    /* color: rgb(197, 95, 95); */
+    color: #c28d1b;
+}
+
+.inputFilesPanel-reloadCurrentButton:not(:hover):not(:focus) .inputFilesPanel-reloadCurrentButtonText {
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(-50%) translateY(-100%);
+    transition: opacity .5s ease, transform 1s .2s ease, color 1s ease;
+    color: #e44747;
+}
+/* 
+.inputFilesPanel-pathView {
+    transition: background-color .2s ease;
+    transition-property: background-color, color;
+    transition-duration: .2s;
+    transition-timing-function: ease;
+} */
+
+/* .inputFilesPanel-pathView--highlightReload {
+    background-color: #ebd29c;
+    color: #8d6102;
+    outline: 0;
+
+    transition-property: background-color, color;
+    transition-duration: .35s;
+    transition-delay: .4s;
+    transition-timing-function: ease;
+} */
+
+.inputFilesPanel-pathView {
+    transition-property: transform;
+    transition-duration: .2s;
+    transition-timing-function: ease;
+}
+
+.inputFilesPanel-pathView--highlightReload {
+    transform: scale(1.12);
+
+    outline: none;
+    box-shadow: 0 0px 12px 5px #ebd29cce;
+
+    transition: transform .35s .4s ease, box-shadow .2s .4s;
 }
