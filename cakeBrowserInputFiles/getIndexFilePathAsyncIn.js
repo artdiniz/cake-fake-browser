@@ -27,7 +27,7 @@ export const getIndexFilePathAsyncIn = function (folderPath) {
         const indexWatcher = chokidar.watch(`+(${fileNamesWithExtension.join('|')})`, {
             ignoreInitial: false,
             cwd: folderPath,
-            awaitWriteFinish: true
+            awaitWriteFinish: false
         })
 
         indexWatcher
