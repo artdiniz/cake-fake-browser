@@ -8,7 +8,7 @@ function createCakeBrowserWindow(getCakeBrowserURL) {
 
     Promise.resolve(getCakeBrowserURL())
         .then(cakeBrowserURL => {
-            cakeBrowserWindow.loadURL(cakeBrowserURL)
+            cakeBrowserWindow.loadURL(cakeBrowserURL.toString())
             cakeBrowserWindow.once('ready-to-show', () => cakeBrowserWindow.show())
         })
     

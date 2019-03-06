@@ -1,5 +1,7 @@
 import { app } from 'electron'
 import { stripIndent } from 'common-tags'
+import chalk from 'chalk'
+
 
 import { WithDisabledContentSecurityPolicy } from './session/WithDisabledContentSecurityPolicy'
 import { WithDisabledResponseHeaders } from './session/WithDisabledResponseHeaders'
@@ -36,31 +38,41 @@ async function init ({args = process.argv.slice(2)}) {
             })
     })
 
+    printLogs(1, `${chalk.grey('[Initial setup]')} Waiting user input of src directory`, 1)
+
     const srcDir = await resolveFolderPath({
         appArguments: args
         ,promptUserFunction: cakeWelcomePage.getSrcFolder
     })
 
+    printLogs(1, `${chalk.grey('[Initial setup]')} Received src directory: ${chalk.cyan(srcDir)}`, 1)
+
     cakeWelcomePage.setLoading(srcDir)
     
+    printLogs(1, `${chalk.grey('[Initial setup]')} Starting src files server setup`, 1)
+
     const cakeFilesServer = await setupCakeFilesServer({in: srcDir})
 
+    const cakeServerOrigin = cakeFilesServer.getIndexFileURL().origin
+
+    printLogs(1, `${chalk.grey('[Initial setup]')} Server running at ${chalk.cyan(cakeServerOrigin)}`, 1)
+        
     cakeFilesServer.onError(error => {
         printLogs(
             1
             ,stripIndent`
-                Error on cake files server: 
-                    ${error}
+            Error on cake files server: 
+            ${error}
             ` 
             ,1
         )
     })
-
+        
     let mainWindow = CakeBrowserWindow({
         getCakeBrowserURLFn: cakeFilesServer.getIndexFileURL
     })
-
-    const session = AmnesicSession(
+        
+    const session = AmnesicSession({dontForgetOrigins: [cakeServerOrigin]},
                     WithDisabledResponseHeaders(['Access-Control-Allow-Origin', 'X-Frame-Options'],
                     WithDisabledContentSecurityPolicy(['frame-ancestors', 'frame-src', 'default-src'],
                     InterceptableResponseSession(

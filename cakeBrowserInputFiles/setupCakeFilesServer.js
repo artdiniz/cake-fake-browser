@@ -106,12 +106,13 @@ export const setupCakeFilesServer = async ({in: srcDir}) => {
 
     const serverAddress = await serverIsUpPromise
 
-    const indexFileURL = `http://localhost:${serverAddress.port}`
+    const indexFileURL = new URL(`http://localhost:${serverAddress.port}`)
 
-    const cakeURLWithIframeSrc = memoize((iframeSrc) => iframeSrc
-        ? `${indexFileURL}/?${iframeSrcParameterName}=${iframeSrc}`
+    const cakeURLWithIframeSrc = memoize((iframeSrc) => new URL(iframeSrc
+        ? new URL(`/?${iframeSrcParameterName}=${iframeSrc}`, indexFileURL)
         : indexFileURL
-    )
+    ))
+
     return {
         getIndexFileURL: ({withOpenURL: openURL} = {}) => cakeURLWithIframeSrc(openURL)
         ,cleanup: async () => {

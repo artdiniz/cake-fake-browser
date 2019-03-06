@@ -10,13 +10,15 @@ function AccessedOriginsRecorder(session) {
     }
 }
 
-export function AmnesicSession(session) {
+export function AmnesicSession({dontForgetOrigins: ignoreOrigins = []} = {}, session) {
 
     const originsRecorder = AccessedOriginsRecorder(session)
     
     function forget(origins) {
         const clearStorageDataAsync = Promise.all(
-            origins.map(origin => new Promise((resolve, reject) => 
+            origins
+            .filter(origin => !ignoreOrigins.some(ignored => ignored === origin))
+            .map(origin => new Promise((resolve, reject) => 
                 session.clearStorageData(
                     {origin: origin}
                     ,function(){
