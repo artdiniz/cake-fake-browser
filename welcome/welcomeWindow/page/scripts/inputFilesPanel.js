@@ -1,6 +1,5 @@
 import { remote, ipcRenderer } from 'electron'
 import { $$InputFilesPanel } from './views/$$InputFilesPanel'
-import { stat } from 'fs';
 
 const state =  {
     isLoading: false
@@ -52,7 +51,7 @@ $$panel.onResetButtonClicked(() => {
     ipcRenderer.send('cakeFilesInputReload')
 })
 
-$$panel.onInputFilesBtnClicked(() => {
+$$panel.onSelectSrcFolderBtnClicked(() => {
     const isInitialLoad = !state.isLoading && !state.hasFinishedLoading
 
     const previousState = JSON.parse(JSON.stringify(state))
@@ -86,9 +85,9 @@ $$panel.onInputFilesBtnClicked(() => {
     }
 })
 
-$$panel.onInputFilesBtnFocused((event) => {
+$$panel.onReloadCurrentSrcBtnFocused((event) => {
     if(state.isLoading) {
         event.preventDefault()
-        $$panel.focusFilePath()
+        $$panel.focusSrcFolderPath()
     }
 })

@@ -2,13 +2,12 @@ import { $$InputFilesProgressIcon } from "./$$InputFilesProgressIcon"
 
 export const $$InputFilesPanel = ($panel = document.querySelector()) => {
 
-    const $inputFilesButton = $panel.querySelector('.inputFilesPanel-chooseFolderButton')
+    const $srcFolderPathView = $panel.querySelector('.inputFilesPanel-pathView')
+    
+    const $selectSrcFolderButton = $panel.querySelector('.inputFilesPanel-chooseFolderButton')
     const $resetButton = $panel.querySelector('.inputFilesPanel-resetButton')
 
-    const $inputFilesPathView = $panel.querySelector('.inputFilesPanel-pathView')
-
     const $inputFilesProgress = $panel.querySelector('.inputFilesPanel-progress')
-    
     const $$progressIcon = $$InputFilesProgressIcon($inputFilesProgress)
 
     const renderPath = path => {
@@ -19,7 +18,7 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
     }
 
     const renderInitial = (() => {
-        const buttonInitialContent = $inputFilesButton.textContent
+        const buttonInitialContent = $selectSrcFolderButton.textContent
 
         return () => {
             requestAnimationFrame(() => {
@@ -27,10 +26,10 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
                 $panel.classList.remove('inputFilesPanel--loading')
                 $panel.classList.add('inputFilesPanel--initial')
 
-                $inputFilesButton.classList.remove('inputFilesButton--disabled')
+                $selectSrcFolderButton.classList.remove('inputFilesButton--disabled')
                 
-                $inputFilesButton.textContent = buttonInitialContent
-                $inputFilesButton.blur()
+                $selectSrcFolderButton.textContent = buttonInitialContent
+                $selectSrcFolderButton.blur()
             })
         }
     })()
@@ -44,14 +43,14 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
     
             $$progressIcon.renderLoading()
     
-            $inputFilesButton.textContent = 'Carregando...'
+            $selectSrcFolderButton.textContent = 'Carregando...'
             
-            $inputFilesButton.classList.add('inputFilesButton--disabled')
+            $selectSrcFolderButton.classList.add('inputFilesButton--disabled')
             
-            $inputFilesPathView.innerHTML = renderPath(srcFolder)
+            $srcFolderPathView.innerHTML = renderPath(srcFolder)
 
             srcFolder.split('/').map(path => `<span class="pathPortion">${path}</span>`).join('<span>/</span>')
-            $inputFilesPathView.focus()
+            $srcFolderPathView.focus()
         })
     }
 
@@ -63,11 +62,11 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
             
             $$progressIcon.renderFinishedLoading()
     
-            $inputFilesButton.textContent = 'Abrir outra pasta'
-            $inputFilesButton.classList.remove('inputFilesButton--disabled')
+            $selectSrcFolderButton.textContent = 'Abrir outra pasta'
+            $selectSrcFolderButton.classList.remove('inputFilesButton--disabled')
             
-            $inputFilesPathView.innerHTML = renderPath(srcFolder)
-            $inputFilesPathView.focus()
+            $srcFolderPathView.innerHTML = renderPath(srcFolder)
+            $srcFolderPathView.focus()
         })
     }
 
@@ -75,10 +74,10 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
         renderFinishedLoading
         ,renderIsLoading
         ,renderInitial
-        ,onInputFilesBtnClicked: (callback) => $inputFilesButton.addEventListener('click', callback)
-        ,onInputFilesBtnFocused: (callback) => $inputFilesButton.addEventListener('focus', callback)
+        ,onSelectSrcFolderBtnClicked: (callback) => $selectSrcFolderButton.addEventListener('click', callback)
+        ,onReloadCurrentSrcBtnFocused: (callback) => $selectSrcFolderButton.addEventListener('focus', callback)
         ,onResetButtonClicked: (callback) => $resetButton.addEventListener('click', callback)
-        ,focusFilePath: () => $inputFilesPathView.focus()
+        ,focusSrcFolderPath: () => $srcFolderPathView.focus()
     }
 
 }
