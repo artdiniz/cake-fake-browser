@@ -191,7 +191,7 @@
     font-size: .8em;
     pointer-events: all;
     opacity: 1;
-    transition: opacity .35s .1s ease, transform .55s ease, color .75s .2s ease;
+    transition: opacity .35s ease, transform .55s ease, color .75s .2s ease;
 
     font-family: Helvetica, Arial, sans-serif;
     text-transform: lowercase;
@@ -202,8 +202,8 @@
 .inputFilesPanel-reloadCurrentButton:not(:hover):not(:focus) .inputFilesPanel-reloadCurrentButtonText {
     pointer-events: none;
     opacity: 0;
-    transform: translateX(-50%) translateY(-50%);
-    transition: opacity .5s ease, transform 1s .2s ease, color 1s ease;
+    transform: translateX(-50%) translateY(-100%);
+    transition: opacity .2s ease, transform 1s .2s ease, color 1s ease;
     color: #e44747;
 }
 /* 
