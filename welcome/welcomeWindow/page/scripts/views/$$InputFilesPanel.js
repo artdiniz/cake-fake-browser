@@ -42,7 +42,7 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
             $panel.classList.remove('inputFilesPanel--finishedLoading')
             $panel.classList.add('inputFilesPanel--loading')
 
-            renderReloadButton({enabled: false})
+            renderReloadButton({enabled: true})
     
             $$progressIcon.renderLoading()
     
@@ -97,6 +97,7 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
             $inputFilesProgress.classList.add('inputFilesPanel-reloadCurrentButton')
             $inputFilesProgress.setAttribute('tabindex', 0)
             $inputFilesProgress.appendChild($reloadBtnDescription)
+
             $inputFilesProgress.addEventListener('focus', highlightSrc)
             $inputFilesProgress.addEventListener('blur', removeHiglighSrc)
             $inputFilesProgress.addEventListener('mouseover', highlightSrc)
@@ -107,6 +108,11 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
             $inputFilesProgress.classList.remove('inputFilesPanel--reloadCurrentButton')
             $inputFilesProgress.setAttribute('tabindex', -1)
             $reloadBtnDescription.remove()
+
+            $inputFilesProgress.removeEventListener('focus', highlightSrc)
+            $inputFilesProgress.removeEventListener('blur', removeHiglighSrc)
+            $inputFilesProgress.removeEventListener('mouseover', highlightSrc)
+            $inputFilesProgress.removeEventListener('mouseleave', removeHiglighSrc)
         }
     }
 

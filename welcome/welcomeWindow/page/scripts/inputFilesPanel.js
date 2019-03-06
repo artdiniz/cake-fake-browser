@@ -48,7 +48,7 @@ ipcRenderer.once('cakeFilesSrcFolderLoaded', (event, srcFolder) => {
 })
 
 $$panel.onReloadCurrentSrcBtnClicked(() => {
-    if(!state.isLoading & state.hasFinishedLoading) {
+    if((!state.isLoading && state.hasFinishedLoading) || state.isLoading) {
         ipcRenderer.send('cakeFilesInputReload', state.srcFolder)
     }
 })
