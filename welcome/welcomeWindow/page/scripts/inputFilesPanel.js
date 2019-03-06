@@ -3,16 +3,18 @@ import { $$InputFilesPanel } from './views/$$InputFilesPanel'
 
 const state =  {
     isLoading: false
+    ,loadingStatusMessage: ''
     ,srcFolder: ''
     ,hasFinishedLoading: false
 }
 
 const $$panel = $$InputFilesPanel(document.querySelector('.inputFilesPanel'))
 
-const render = () => {
+const render = (state) => {
     if(state.isLoading && !state.hasFinishedLoading) {
         $$panel.renderIsLoading({
             srcFolder: state.srcFolder
+            ,message: state.loadingStatusMessage
         })
     } else if(state.hasFinishedLoading){
         $$panel.renderFinishedLoading({
@@ -31,9 +33,10 @@ const setState = (newState = state) => {
 
 setState(JSON.parse(sessionStorage.getItem('$$panel-state')) || state)
 
-ipcRenderer.once('cakeFilesSrcFolderLoading', (event, srcFolder) => {
+ipcRenderer.on('cakeFilesSrcFolderLoading', (event, srcFolder, message) => {
     setState({
         srcFolder: srcFolder
+        ,loadingStatusMessage: message
         ,isLoading: true
         ,hasFinishedLoading: false
     })
@@ -66,6 +69,7 @@ $$panel.onSelectSrcFolderBtnClicked(() => {
         setState({
             isLoading: true
             ,hasFinishedLoading: false
+            ,loadingStatusMessage: 'Uma janela se abriu para você selecionar a pasta onde criaremos os códigos do projeto'
             ,srcFolder: 'selecione uma pasta'
         })
     

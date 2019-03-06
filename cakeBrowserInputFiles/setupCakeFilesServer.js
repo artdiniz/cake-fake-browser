@@ -12,7 +12,6 @@ import { promisify } from 'util'
 
 import { printLogs } from '../util/printLogs'
 import { CakeIndexFileContent } from './CakeIndexFileContent'
-import { getIndexFilePathAsyncIn } from './getIndexFilePathAsyncIn';
 
 import stoppable from 'stoppable'
 
@@ -54,10 +53,8 @@ const setFileSystemWatcher = function(globPath, callback) {
     return watcher
 }
 
-export const setupCakeFilesServer = async ({in: srcDir}) => {
+export const setupCakeFilesServer = async ({in: srcDir, indexFilePath}) => {
     
-    const indexFilePath = await getIndexFilePathAsyncIn(srcDir)
-
     const indexFileWatcher = setFileSystemWatcher(indexFilePath, (eventName) => {
         printLogs(`${chalk.grey('[Cake files]')} Update ${chalk.green(eventName)}: ${chalk.cyan(chalk.underline(indexFilePath))}`, 2)
         getIndexContent.clear()

@@ -11,7 +11,7 @@ import { AmnesicSession } from './session/AmnesicSession'
 import { RestartableApp } from './util/RestartableApp'
 import { printLogs } from './util/printLogs'
 import { CakeWelcomePage } from './welcome/CakeWelcomePage'
-import { resolveFolderPath, setupCakeFilesServer } from './cakeBrowserInputFiles'
+import { resolveFolderPath, setupCakeFilesServer, getIndexFilePathAsyncIn } from './cakeBrowserInputFiles'
 import { CakeBrowserWindow } from './window/CakeBrowserWindow'
 
 process.on('unhandledRejection', (error, rejectedPromise) => {
@@ -20,6 +20,10 @@ process.on('unhandledRejection', (error, rejectedPromise) => {
 })
 
 const cakeApp = RestartableApp(app)
+
+const log = (message) => {
+    printLogs(1, `${chalk.grey('[Initial setup]')} ${message}`, 1)
+}
 
 async function init ({args = process.argv.slice(2)}) {
 
@@ -38,24 +42,38 @@ async function init ({args = process.argv.slice(2)}) {
             })
     })
 
-    printLogs(1, `${chalk.grey('[Initial setup]')} Waiting user input of src directory`, 1)
+    log('Waiting user input of src directory')
 
     const srcDir = await resolveFolderPath({
         appArguments: args
         ,promptUserFunction: cakeWelcomePage.getSrcFolder
     })
 
-    printLogs(1, `${chalk.grey('[Initial setup]')} Received src directory: ${chalk.cyan(srcDir)}`, 1)
+    log(`Received src directory: ${chalk.cyan(srcDir)}`)
 
-    cakeWelcomePage.setLoading(srcDir)
-    
-    printLogs(1, `${chalk.grey('[Initial setup]')} Starting src files server setup`, 1)
+    const possibleIndexFileNames = ['index', 'main', 'cake', 'browser']
 
-    const cakeFilesServer = await setupCakeFilesServer({in: srcDir})
+    cakeWelcomePage.setLoading(
+        srcDir
+        ,cakeWelcomePage.messages.waitingForIndexFileCreation(possibleIndexFileNames)
+    )
+
+    const indexFilePath = await getIndexFilePathAsyncIn(srcDir, {
+        fileNames: possibleIndexFileNames
+    })
+
+    cakeWelcomePage.setLoading(
+        srcDir
+        ,cakeWelcomePage.messages.startingServer(indexFilePath)
+    )
+
+    log('Starting src files server setup') 
+
+    const cakeFilesServer = await setupCakeFilesServer({in: srcDir, indexFilePath})
 
     const cakeServerOrigin = cakeFilesServer.getIndexFileURL().origin
-
-    printLogs(1, `${chalk.grey('[Initial setup]')} Server running at ${chalk.cyan(cakeServerOrigin)}`, 1)
+    
+    log(`Server running at ${chalk.cyan(cakeServerOrigin)}`) 
         
     cakeFilesServer.onError(error => {
         printLogs(

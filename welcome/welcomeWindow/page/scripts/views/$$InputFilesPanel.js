@@ -3,11 +3,12 @@ import { $$InputFilesProgressIcon } from "./$$InputFilesProgressIcon"
 export const $$InputFilesPanel = ($panel = document.querySelector()) => {
 
     const $srcFolderPathView = $panel.querySelector('.inputFilesPanel-pathView')
+    const $reloadCurrentSrcButton = $panel.querySelector('.inputFilesPanel-reloadCurrentButton')
     
     const $selectSrcFolderButton = $panel.querySelector('.inputFilesPanel-chooseFolderButton')
     const $resetButton = $panel.querySelector('.inputFilesPanel-resetButton')
 
-    const $inputFilesProgress = $panel.querySelector('.inputFilesPanel-progress')
+    const $inputFilesProgressMessage = $panel.querySelector('.inputFilesPanel-progressMessage')
     const $$progressIcon = $$InputFilesProgressIcon($panel.querySelector('.inputFilesPanel-progressIcon'))
 
     const renderPath = path => {
@@ -36,11 +37,13 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
         }
     })()
 
-    const renderIsLoading = ({srcFolder}) => {
+    const renderIsLoading = ({srcFolder, message}) => {
         requestAnimationFrame(() => {
             $panel.classList.remove('inputFilesPanel--initial')
             $panel.classList.remove('inputFilesPanel--finishedLoading')
             $panel.classList.add('inputFilesPanel--loading')
+
+            $inputFilesProgressMessage.innerHTML = message
 
             renderReloadButton({enabled: true})
     
@@ -64,6 +67,7 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
             $panel.classList.add('inputFilesPanel--finishedLoading')
 
             renderReloadButton({enabled: true})
+            $inputFilesProgressMessage.innerHTML = 'Tudo certo! O seu navegador foi carregado com sucesso =)'
             
             $$progressIcon.renderFinishedLoading()
     
@@ -75,17 +79,17 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
         })
     }
 
-    const $reloadBtnDescription = (() => {
-        const tpl = document.createElement('tpl')
-
-        tpl.innerHTML = `
-            <span class="inputFilesPanel-reloadCurrentButtonText">Recarregar</span>
-        `
-        return tpl.children[0]
-    })()
-
     
     const renderReloadButton = (() => {
+        const $reloadBtnDescription = (() => {
+            const tpl = document.createElement('tpl')
+    
+            tpl.innerHTML = `
+                <span class="inputFilesPanel-reloadCurrentButtonText">Recarregar</span>
+            `
+            return tpl.children[0]
+        })()
+
         const highlightSrc = () => {
             $srcFolderPathView.classList.add('inputFilesPanel-pathView--highlightReload')
         }
@@ -103,27 +107,25 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
         return ({enabled}) => {
 
             if(enabled) {
-                $inputFilesProgress.classList.add('inputFilesPanel-reloadCurrentButton')
-                $inputFilesProgress.setAttribute('tabindex', 0)
-                $inputFilesProgress.appendChild($reloadBtnDescription)
-    
-                $inputFilesProgress.addEventListener('keyup', enableKeyboardClick)
-                $inputFilesProgress.addEventListener('focus', highlightSrc)
-                $inputFilesProgress.addEventListener('blur', removeHiglighSrc)
-                $inputFilesProgress.addEventListener('mouseover', highlightSrc)
-                $inputFilesProgress.addEventListener('mouseleave', removeHiglighSrc)
-    
-    
+                $reloadCurrentSrcButton.setAttribute('tabindex', 0)
+                $reloadCurrentSrcButton.appendChild($reloadBtnDescription)
+
+                
+                $reloadCurrentSrcButton.addEventListener('keyup', enableKeyboardClick)
+                $reloadCurrentSrcButton.addEventListener('focus', highlightSrc)
+                $reloadCurrentSrcButton.addEventListener('blur', removeHiglighSrc)
+                $reloadCurrentSrcButton.addEventListener('mouseover', highlightSrc)
+                $reloadCurrentSrcButton.addEventListener('mouseleave', removeHiglighSrc)
+
             } else {
-                $inputFilesProgress.classList.remove('inputFilesPanel--reloadCurrentButton')
-                $inputFilesProgress.setAttribute('tabindex', -1)
+                $reloadCurrentSrcButton.setAttribute('tabindex', -1)
                 $reloadBtnDescription.remove()
     
-                $inputFilesProgress.removeEventListener('keyup  ', enableKeyboardClick)
-                $inputFilesProgress.removeEventListener('focus', highlightSrc)
-                $inputFilesProgress.removeEventListener('blur', removeHiglighSrc)
-                $inputFilesProgress.removeEventListener('mouseover', highlightSrc)
-                $inputFilesProgress.removeEventListener('mouseleave', removeHiglighSrc)
+                $reloadCurrentSrcButton.removeEventListener('keyup  ', enableKeyboardClick)
+                $reloadCurrentSrcButton.removeEventListener('focus', highlightSrc)
+                $reloadCurrentSrcButton.removeEventListener('blur', removeHiglighSrc)
+                $reloadCurrentSrcButton.removeEventListener('mouseover', highlightSrc)
+                $reloadCurrentSrcButton.removeEventListener('mouseleave', removeHiglighSrc)
             }
         }
     })()
@@ -135,7 +137,7 @@ export const $$InputFilesPanel = ($panel = document.querySelector()) => {
         ,onSelectSrcFolderBtnClicked: (callback) => $selectSrcFolderButton.addEventListener('click', callback)
         ,onReloadCurrentSrcBtnFocused: (callback) => $selectSrcFolderButton.addEventListener('focus', callback)
         ,onResetButtonClicked: (callback) => $resetButton.addEventListener('click', callback)
-        ,onReloadCurrentSrcBtnClicked: (callback) => $inputFilesProgress.addEventListener('click', callback)
+        ,onReloadCurrentSrcBtnClicked: (callback) => $reloadCurrentSrcButton.addEventListener('click', callback)
         ,focusSrcFolderPath: () => $srcFolderPathView.focus()
     }
 

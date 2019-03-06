@@ -5,9 +5,8 @@ import { stripIndent } from 'common-tags'
 import chokidar from 'chokidar'
 import chalk from 'chalk'
 
-export const getIndexFilePathAsyncIn = function (folderPath) {
+export const getIndexFilePathAsyncIn = function (folderPath, {fileNames = []} = {fileNames: []}) {
     return new Promise((resolve, reject) => {
-        const fileNames = ['index', 'main', 'cake', 'browser']
         const fileNamesWithExtension = fileNames.map(name => `${name}.html`)
 
         printLogs(
