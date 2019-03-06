@@ -17,7 +17,7 @@ import { getIndexFilePathAsyncIn } from './getIndexFilePathAsyncIn';
 import stoppable from 'stoppable'
 
 const getIndexContent = memoize((indexFilePath, iframeSRC) => {
-    printLogs(1, '[Index file server] Creating index content with open URL: ' +  chalk.cyan(iframeSRC))
+    printLogs(1, `${chalk.grey('[Cake files]')} Creating index content with open URL: ` +  chalk.cyan(iframeSRC))
 
     const indexContent = fs.readFileSync(indexFilePath)
 
@@ -55,10 +55,11 @@ const setFileSystemWatcher = function(globPath, callback) {
 }
 
 export const setupCakeFilesServer = async ({in: srcDir}) => {
+    
     const indexFilePath = await getIndexFilePathAsyncIn(srcDir)
 
     const indexFileWatcher = setFileSystemWatcher(indexFilePath, (eventName) => {
-        printLogs(`[Update index][${eventName}]: ${chalk.cyan(chalk.underline(indexFilePath))}`, 2)
+        printLogs(`${chalk.grey('[Cake files]')} Update ${chalk.green(eventName)}: ${chalk.cyan(chalk.underline(indexFilePath))}`, 2)
         getIndexContent.clear()
     })
     
