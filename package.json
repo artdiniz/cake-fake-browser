@@ -16,11 +16,11 @@
     },
     "main": "main.js",
     "bin": {
-        "cake": "./dist/index.js"
+        "cake": "./bin/index.js"
     },
     "scripts": {
-        "start": "electron ./index",
-        "start-class": "run-electron ./index"
+        "start": "electron ./app/index",
+        "start-class": "run-electron ./app/index"
     },
     "dependencies": {
         "chalk": "^2.4.2",
@@ -44,5 +44,15 @@
         "run-electron": "github:artdiniz/run-electron#useExeca",
         "stoppable": "^1.1.0",
         "tmp": "0.0.33"
+    },
+    "devDependencies": {
+        "electron-builder": "^20.38.5"
+    },
+    "build": {
+        "appId": "br.com.caelum.cake.shell",
+        "mac": {
+            "category": "public.app-category.developer-tools"
+        },
+        "productName": "Cake Browser"
     }
 }
