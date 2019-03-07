@@ -1,5 +1,6 @@
 {
     "name": "@acaelum/cake",
+    "packageName": "Cake Browser",
     "description": "Fake browser wrapper that will power JS-12 course at Caelum",
     "keywords": [
         "caelum",
@@ -14,7 +15,7 @@
     "publishConfig": {
         "access": "public"
     },
-    "main": "main.js",
+    "main": "./src/index.js",
     "bin": {
         "cake": "./bin/index.js"
     },
@@ -51,15 +52,19 @@
         "electron-builder": "^20.38.5",
         "electron": "^4.0.5"
     },
-    "build": {
+    "build": {  
+        "productName": "Cake",
         "appId": "br.com.caelum.cake.shell",
         "mac": {
             "category": "public.app-category.developer-tools"
         },
-        "productName": "Cake Browser"
-        ,"directories": {
-            "output": "dist"
-            ,"buildResources": "resources"
+        "linux": {
+            "executableName": "cake"
+            ,"artifactName": "${productName}-${version}.${ext}"
+        },
+        "directories": {
+            "output": "dist",
+            "buildResources": "resources"
         }
     }
 }
