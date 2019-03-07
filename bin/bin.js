@@ -15,7 +15,7 @@ import readPkgUp from 'read-pkg-up'
 import _isUndefined from 'lodash/isUndefined'
 import _negate from 'lodash/negate'
 
-import { resolvePathFromCwd } from '../app/cakeBrowserInputFiles/resolvePathFromCwd'
+import { resolvePathFromCwd } from '../src/cakeBrowserInputFiles/resolvePathFromCwd'
 
 const pkgJSONPath =  readPkgUp.sync({cwd: __dirname}).path
 const cakePackageDir = path.dirname(pkgJSONPath)

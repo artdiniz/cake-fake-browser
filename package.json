@@ -19,15 +19,17 @@
         "cake": "./bin/index.js"
     },
     "scripts": {
-        "start": "electron ./app/index",
-        "start-class": "run-electron ./app/index"
+        "start": "electron ./src/index",
+        "start-class": "run-electron ./src/index",
+        "pack": "electron-builder --dir",
+        "dist": "electron-builder",
+        "postinstall": "electron-builder install-app-deps"
     },
     "dependencies": {
         "chalk": "^2.4.2",
         "cheerio": "^1.0.0-rc.2",
         "chokidar": "^2.1.2",
         "common-tags": "^1.8.0",
-        "electron": "^4.0.5",
         "esm": "^3.2.4",
         "execa": "^1.0.0",
         "expand-tilde": "^2.0.2",
@@ -46,7 +48,8 @@
         "tmp": "0.0.33"
     },
     "devDependencies": {
-        "electron-builder": "^20.38.5"
+        "electron-builder": "^20.38.5",
+        "electron": "^4.0.5"
     },
     "build": {
         "appId": "br.com.caelum.cake.shell",
@@ -54,5 +57,9 @@
             "category": "public.app-category.developer-tools"
         },
         "productName": "Cake Browser"
+        ,"directories": {
+            "output": "dist"
+            ,"buildResources": "resources"
+        }
     }
 }
