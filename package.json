@@ -9,7 +9,8 @@
     ],
     "author": {
         "name": "Artur Diniz Adam",
-        "url": "https://github.com/artdiniz"
+        "url": "https://github.com/artdiniz",
+        "email": "artur.adam@caelum.com.br"
     },
     "version": "0.0.17",
     "publishConfig": {
@@ -55,12 +56,19 @@
     "build": {  
         "productName": "Cake",
         "appId": "br.com.caelum.cake.shell",
+        "files": [
+            "**/*"
+            ,"resources/**/*"
+        ],
         "mac": {
             "category": "public.app-category.developer-tools"
         },
         "linux": {
-            "executableName": "cake"
-            ,"artifactName": "${productName}-${version}.${ext}"
+            "executableName": "cake",
+            "artifactName": "${productName}-${version}.${ext}",
+            "target": [
+                "AppImage"
+            ]
         },
         "directories": {
             "output": "dist",

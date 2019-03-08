@@ -7,18 +7,15 @@ process.env.NODE_NO_WARNINGS = 1
 // With electron as dependency, we don't need to have a build step nor a publish method for the binaries.
 // We can just `npm install -g` and run the application via CLI.
 
-import path from 'path'
-
 import execa from 'execa'
 
-import readPkgUp from 'read-pkg-up'
 import _isUndefined from 'lodash/isUndefined'
 import _negate from 'lodash/negate'
 
 import { resolvePathFromCwd } from '../src/cakeBrowserInputFiles/resolvePathFromCwd'
+import { getPackageRootDir } from '../src/util/getAppPath'
 
-const pkgJSONPath =  readPkgUp.sync({cwd: __dirname}).path
-const cakePackageDir = path.dirname(pkgJSONPath)
+const cakePackageDir = getPackageRootDir()
 
 const argsDir = resolvePathFromCwd(process.argv.slice(2)[0])
 const args = [argsDir, ...process.argv.slice(3)].filter(_negate(_isUndefined))
