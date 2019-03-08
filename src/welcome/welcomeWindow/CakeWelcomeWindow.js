@@ -1,19 +1,21 @@
-import { GenericBrowserWindow } from "../../window/GenericBrowserWindow"
+import { GenericBrowserWindow } from '../../window/GenericBrowserWindow'
+import { textHandlingContextMenuFor } from '../../menu/contextMenus'
 
 const createCakeWelcomeWindow = () => {    
-    let inputFilesWindow = GenericBrowserWindow()
+    let welcomeWindow = GenericBrowserWindow()
+
+    textHandlingContextMenuFor(welcomeWindow)
 
     const cakePagePath = require.resolve('./page/index.html')
+    welcomeWindow.loadURL('file://' + cakePagePath)
 
-    inputFilesWindow.loadURL('file://' + cakePagePath)
-
-    inputFilesWindow.on('closed', () => {
-        inputFilesWindow.removeAllListeners()
-        inputFilesWindow = null
+    welcomeWindow.on('closed', () => {
+        welcomeWindow.removeAllListeners()
+        welcomeWindow = null
     })
 
     return new Promise((resolve, reject) => {
-        inputFilesWindow.once('ready-to-show', () => resolve(inputFilesWindow))
+        welcomeWindow.once('ready-to-show', () => resolve(welcomeWindow))
     })
 }
 

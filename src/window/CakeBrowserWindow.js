@@ -1,10 +1,13 @@
 import {GenericBrowserWindow} from './GenericBrowserWindow'
+import { fullBlownContextMenuFor } from '../menu/contextMenus'
 
 
 function createCakeBrowserWindow(getCakeBrowserURL) {
     let cakeBrowserWindow = GenericBrowserWindow({
         title: "Caelum Cake Browser"
     })
+
+    fullBlownContextMenuFor(cakeBrowserWindow)
 
     Promise.resolve(getCakeBrowserURL())
         .then(cakeBrowserURL => {
