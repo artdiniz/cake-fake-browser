@@ -1,6 +1,7 @@
 {
     "name": "@acaelum/cake",
     "productName": "Cake",
+    "packageName": "Cake",
     "description": "Fake browser wrapper that will power JS-12 course at Caelum",
     "keywords": [
         "caelum",
@@ -62,14 +63,26 @@
             "resources/**/*"
         ],
         "mac": {
-            "category": "public.app-category.developer-tools"
+            "category": "public.app-category.developer-tools",
+            "artifactName": "${productName}-${os}-${version}.${ext}"
         },
         "linux": {
             "executableName": "cake",
-            "artifactName": "${productName}-${version}.${ext}",
+            "artifactName": "${productName}-${os}-${version}.${ext}",
             "target": [
-                "AppImage"
+                "AppImage",
+                "tar.gz"
             ]
+        },
+        "win": {
+            "target": [
+                "nsis",
+                "zip"
+            ],
+            "artifactName": "${productName}-${os}-${version}.${ext}"
+        },
+        "nsis": {
+            "oneClick": "false"
         },
         "directories": {
             "output": "dist",
