@@ -13,7 +13,7 @@
         "url": "https://github.com/artdiniz",
         "email": "artur.adam@caelum.com.br"
     },
-    "version": "0.0.17",
+    "version": "0.0.18",
     "publishConfig": {
         "access": "public"
     },
