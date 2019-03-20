@@ -1,7 +1,7 @@
 import { BrowserWindow } from 'electron'
 
 import _merge from 'lodash/merge'
-import { getIcon, getPackageRootDir } from '../util/getAppPath';
+import { getIcon } from '../util/getAppPath';
 
 function createGenericBrowserWindow (opts = {}) {
     const {screen} = require('electron')

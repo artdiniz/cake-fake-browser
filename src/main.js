@@ -14,6 +14,8 @@ import { CakeWelcomePage } from './welcome/CakeWelcomePage'
 import { resolveFolderPath, setupCakeFilesServer, getIndexFilePathAsyncIn } from './cakeBrowserInputFiles'
 import { CakeBrowserWindow } from './window/CakeBrowserWindow'
 
+import './menu/appMenu'
+
 process.on('unhandledRejection', (error, rejectedPromise) => {
     console.error('Unhandled Rejection at:', rejectedPromise, 'reason:', error);
     process.exit(1)

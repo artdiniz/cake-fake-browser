@@ -1,6 +1,6 @@
 {
     "name": "@acaelum/cake",
-    "packageName": "Cake Browser",
+    "productName": "Cake",
     "description": "Fake browser wrapper that will power JS-12 course at Caelum",
     "keywords": [
         "caelum",
