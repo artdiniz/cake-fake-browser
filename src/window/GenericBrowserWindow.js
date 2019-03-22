@@ -16,7 +16,7 @@ function createGenericBrowserWindow (opts = {}) {
             }
             ,sandbox: true
             ,show: false
-            ,icon: getIcon('cake.png')
+            ,icon: getIcon('cake-squared.png')
         }
         , opts
     )
