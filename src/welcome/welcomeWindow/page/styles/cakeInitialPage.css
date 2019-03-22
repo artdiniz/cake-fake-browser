@@ -1,11 +1,21 @@
 .cakeInitialPage {
-    padding: 2em 0;
     min-height: 100%;
     width: 100%;
-    background: rgb(91, 194, 212);
-
+    padding: 2em 0;
+    box-sizing: border-box;
+    
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    font-size: .93em;
+
+    background: rgb(91, 194, 212);
+}
+
+@media(min-height: 832px) {
+    .cakeInitialPage {
+        font-size: 1em;
+    }
 }

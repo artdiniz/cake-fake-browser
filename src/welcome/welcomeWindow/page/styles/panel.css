@@ -4,10 +4,16 @@
     text-align: center;
     justify-content: center;
 
-    padding: 2em;
+    padding: 1.5em;
 
     background: rgba(255,255,255,.75);
     border-radius: .7em;
 
     color: rgb(24, 51, 56);
+}
+
+@media(min-height: 745px) {
+    .panel {
+        padding: 2em;
+    }
 }

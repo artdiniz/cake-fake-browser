@@ -144,7 +144,13 @@
     display: block;
     width: auto;
     max-width: 30em;
-    margin: 2em 0;
+    margin: 1em 0 2em;
+}
+
+@media(min-height: 758px) {
+    .inputFilesPanel-progressMessage {
+        margin: 2em 0;
+    }
 }
 
 .inputFilesPanel-progressIcon {
