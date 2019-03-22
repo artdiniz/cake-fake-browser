@@ -71,6 +71,7 @@
             "artifactName": "${productName}-${os}-${version}.${ext}",
             "target": [
                 "AppImage",
+                "deb",
                 "tar.gz"
             ]
         },
