@@ -7,14 +7,29 @@ function createCakeBrowserWindow(getCakeBrowserURL) {
         title: "Caelum Cake Browser"
     })
 
-    fullBlownContextMenuFor(cakeBrowserWindow)
+    let showTimeout = false
+    const readyWindowPromise = new Promise((resolve, reject) => {
+        const timeoutChecker = setInterval(() => {
+            if(showTimeout) {
+                clearInterval(timeoutChecker)
+                resolve(cakeBrowserWindow)
+            }
+        }, 10)
+
+        cakeBrowserWindow.once('ready-to-show', () => {
+            clearInterval(timeoutChecker)
+            resolve(cakeBrowserWindow)
+        })
+    })
 
     Promise.resolve(getCakeBrowserURL())
         .then(cakeBrowserURL => {
             cakeBrowserWindow.loadURL(cakeBrowserURL.toString())
-            cakeBrowserWindow.once('ready-to-show', () => cakeBrowserWindow.show())
+            setTimeout(() => { showTimeout = true }, 100)
         })
-    
+
+    fullBlownContextMenuFor(cakeBrowserWindow)
+
     cakeBrowserWindow.on('closed', () => {
         cakeBrowserWindow.removeAllListeners()
         cakeBrowserWindow = null
@@ -31,9 +46,14 @@ function createCakeBrowserWindow(getCakeBrowserURL) {
             event.newGuest = null
         })
     })
+
+    readyWindowPromise.then(() => {
+        cakeBrowserWindow.show()
+        cakeBrowserWindow.focus()
+    })
     
     return cakeBrowserWindow
 }
 
 
-export const CakeBrowserWindow = ({getCakeBrowserURLFn}) => createCakeBrowserWindow(getCakeBrowserURLFn)
+export const CakeBrowserWindow = ({ getCakeBrowserURLFn }) => createCakeBrowserWindow(getCakeBrowserURLFn)
