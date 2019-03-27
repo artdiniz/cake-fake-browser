@@ -1,0 +1,109 @@
+<meta charset="utf-8">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        font-family: 'Helvetica', 'Arial', sans-serif;
+        background-color: #F4F4F4;
+    } 
+    
+    .promptForm {
+        padding: 1em 2em 2em;
+        text-align: left;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .promptForm-input {
+        padding: .25em;
+        font-size: 1em;
+        margin: 1em 0;
+    }
+
+    .promptForm-input,
+    .promptForm-message {
+        display: block;
+        text-align: left;
+        width: 100%;
+        color: rgba(0,0,0,.75);
+        line-height: 1.25em;
+    }
+
+    .promptForm-btn + .promptForm-btn {
+        margin-left: 1em;
+    }
+
+    .promptForm-btnContainer {
+        text-align: right
+    }
+
+    :nth-child(n):focus {
+        outline: 2px solid rgb(50, 154, 162);
+    }
+
+    .promptForm-btn {
+        display: inline-block;
+        font-size: 1em;
+        padding: .25em;
+        background-color: transparent;
+        border: 1px solid #cecece;
+        color: rgb(50, 154, 162);
+        border-radius: 2px;
+        width: 6em;
+    }
+
+    .promptForm-btn--primary {
+        background-color: rgb(91, 194, 212);
+        color: white;
+        font-weight: bold;
+    }
+</style>
+
+<form id="promptForm" class="promptForm">
+    <label class="promptForm-message" for="val"> 
+        ${message} 
+    </label>
+    <input id="promptValue" class="promptForm-input" value="${defaultValue}" autofocus />
+
+    <div class="promptForm-btnContainer">
+        <button type="button" onclick="window.close()" class="promptForm-btn">
+            Cancelar
+        </button>
+        <button type="submit" class="promptForm-btn promptForm-btn--primary">
+            OK
+        </button>
+    </div>
+</form>
+
+<script>
+    promptForm.addEventListener("submit", event => {
+        event.preventDefault()
+        require('electron').ipcRenderer.send('prompt-response', promptValue.value) 
+        window.close()
+    })
+
+    document.body.addEventListener('click', event => {
+        if(!event.target.classList.contains(`promptForm-btn`)) {
+            setTimeout(()=> {
+                promptValue.focus()
+            }, 0)
+        }
+    })
+
+    document.body.addEventListener('keyup', event => {
+        if(event.key === "Escape") {
+            window.close()
+        }
+    })
+</script>

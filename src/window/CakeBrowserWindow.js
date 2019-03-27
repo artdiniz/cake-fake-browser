@@ -1,6 +1,7 @@
 import {GenericBrowserWindow} from './GenericBrowserWindow'
 import { fullBlownContextMenuFor } from '../menu/contextMenus'
 
+import { setupStdLibFor } from './stdLib/setup'
 
 function createCakeBrowserWindow(getCakeBrowserURL) {
     let cakeBrowserWindow = GenericBrowserWindow({
@@ -29,6 +30,7 @@ function createCakeBrowserWindow(getCakeBrowserURL) {
         })
 
     fullBlownContextMenuFor(cakeBrowserWindow)
+    setupStdLibFor(readyWindowPromise)
 
     cakeBrowserWindow.on('closed', () => {
         cakeBrowserWindow.removeAllListeners()
