@@ -50,14 +50,23 @@ ipcRenderer.once('cakeFilesSrcFolderLoaded', (event, srcFolder) => {
     })
 })
 
+function reloadApp(srcFolder) {
+    ipcRenderer.removeAllListeners()
+    if (srcFolder === undefined){
+        ipcRenderer.send('cakeFilesInputReload')
+    } else {
+        ipcRenderer.send('cakeFilesInputReload', srcFolder)
+    }
+}
+
 $$panel.onReloadCurrentSrcBtnClicked(() => {
     if((!state.isLoading && state.hasFinishedLoading) || state.isLoading) {
-        ipcRenderer.send('cakeFilesInputReload', state.srcFolder)
+        reloadApp(state.srcFolder)
     }
 })
 
 $$panel.onResetButtonClicked(() => {
-    ipcRenderer.send('cakeFilesInputReload')
+    reloadApp()
 })
 
 $$panel.onSelectSrcFolderBtnClicked(() => {
@@ -82,9 +91,9 @@ $$panel.onSelectSrcFolderBtnClicked(() => {
                     })
     
                     if(isInitialLoad) {
-                        ipcRenderer.send('cakeFilesInput', state.srcFolder)
+                        reloadApp(state.srcFolder)
                     } else {
-                        ipcRenderer.send('cakeFilesInputReload', state.srcFolder)
+                        reloadApp(state.srcFolder)
                     }
                     
                 } else {

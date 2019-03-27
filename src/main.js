@@ -1,4 +1,4 @@
-import { app } from 'electron'
+import { app, ipcMain } from 'electron'
 import { stripIndent } from 'common-tags'
 import chalk from 'chalk'
 
@@ -125,6 +125,10 @@ async function init ({args = process.argv.slice(2)}) {
                 : `Couldn't close src dir watchers`
             )
         ])
+    })
+
+    cakeApp.addCleanupTask(function cleanupIPCMainListeners() {
+        ipcMain.removeAllListeners()
     })
 
     cakeWelcomePage.setLoaded(srcDir)
