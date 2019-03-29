@@ -59,7 +59,7 @@ export const setupPromptFor =  windowPromise => {
         })
 
         ipcMain.on('prompt-response', function(event, arg) {
-            if (arg === ''){ arg = null }
+            if (!arg){ arg = '' }
             promptResponse = arg
         })
     })
