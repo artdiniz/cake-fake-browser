@@ -7,18 +7,24 @@ export function WithDisabledContentSecurityPolicy(bannedPolicyNames, session) {
     }
 
     session.addResponseInterceptor(function disableContentSecurityPolicy(details) {
-        const originalCSPHeader = details.responseHeaders['Content-Security-Policy']
-        if (originalCSPHeader) {
+
+        const originalCSPHeaderName = Object
+            .keys(details.responseHeaders)
+            .find(headerName => headerName.toLowerCase() === 'content-security-policy')
+
+        const originalCSPHeaderValue = details.responseHeaders[originalCSPHeaderName]
+
+        if (originalCSPHeaderValue) {
             // console.log("Original:", JSON.stringify(originalCSPHeader, null, 4))
 
-            const newCSPHeader = details.responseHeaders['Content-Security-Policy']
+            const newCSPHeader = details.responseHeaders[originalCSPHeaderName]
                 .map(policy => policy.split(";"))
                 .filter(Boolean)
                 .map(props => props.filter(prop => !isBannedPolicy(prop)))
                 .map(props => props.join(";"))
 
             // console.log("Filtered:", JSON.stringify(newCSPHeader, null, 4))
-            details.responseHeaders['Content-Security-Policy'] = newCSPHeader
+            details.responseHeaders[originalCSPHeaderName] = newCSPHeader
         }
 
         return { cancel: false, responseHeaders: details.responseHeaders }
