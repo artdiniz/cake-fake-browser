@@ -11,7 +11,7 @@ import { AmnesicSession } from './session/AmnesicSession'
 import { RestartableApp } from './util/RestartableApp'
 import { printLogs } from './util/printLogs'
 import { CakeWelcomePage } from './welcome/CakeWelcomePage'
-import { resolveFolderPath, setupCakeFilesServer, getIndexFilePathAsyncIn } from './cakeBrowserInputFiles'
+import { promptUserIfInvalidPath, setupCakeFilesServer, getIndexFilePathAsyncIn } from './cakeBrowserInputFiles'
 import { CakeBrowserWindow } from './window/CakeBrowserWindow'
 
 import './menu/appMenu'
@@ -27,7 +27,7 @@ const log = (message) => {
     printLogs(1, `${chalk.grey('[Initial setup]')} ${message}`, 1)
 }
 
-async function init ({args = process.argv.slice(2)}) {
+async function init ({args: cliArgs = process.argv.slice(2)}) {
 
     cakeApp.onWillQuitBeforeCleanup(() => printLogs(1, '* Quit requested. *', 1))
     cakeApp.onWillQuitAfterCleanup(() => printLogs(1, '* Quit cleanup succesfull! *', 1))
@@ -46,8 +46,8 @@ async function init ({args = process.argv.slice(2)}) {
 
     log('Waiting user input of src directory')
 
-    const srcDir = await resolveFolderPath({
-        appArguments: args
+    const srcDir = await promptUserIfInvalidPath({
+        path: cliArgs[0]
         ,promptUserFunction: cakeWelcomePage.getSrcFolder
     })
 
