@@ -1,1 +1,1 @@
-console.log('Injected scripts')
+console.log('Rodando com o app Cake')
