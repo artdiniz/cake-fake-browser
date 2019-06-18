@@ -112,7 +112,7 @@ async function init ({args: cliArgs = process.argv.slice(2)}) {
     })
 
     cakeApp.addCleanupTask(async function destroyCakeFilesServer(event, cleanupLogger){ 
-        const {clearedWatchers, serverShutdownWasGracefull} = await cakeFilesServer.cleanup()
+        const {clearedWatchers, serverShutdownWasGracefull, otherMessages} = await cakeFilesServer.cleanup()
         
         cleanupLogger.log(...[
             `Closed cake files server ${
@@ -124,6 +124,7 @@ async function init ({args: cliArgs = process.argv.slice(2)}) {
                 ? `Closed ${watcher}`
                 : `Couldn't close src dir watchers`
             )
+            ,otherMessages
         ])
     })
 

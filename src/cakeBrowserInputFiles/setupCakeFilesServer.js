@@ -117,12 +117,14 @@ export const setupCakeFilesServer = async ({in: srcDir, indexFilePath}) => {
             const serverShutdownWasGracefull = await stopServerAsync()
             serverEmitter.removeAllListeners()
             const closedIndexFileWatcher = indexFileWatcher.clear()
+            getIndexContent.clear()
             
             return {
-                serverShutdownWasGracefull                
+                serverShutdownWasGracefull
                 ,clearedWatchers: [
                     [indexFileWatcher, closedIndexFileWatcher]
                 ]
+                ,otherMessages: `Cleared '${indexFilePath}' file memoize cache`
             }
         }
         ,onError: callback => serverEmitter.on('error', callback)
