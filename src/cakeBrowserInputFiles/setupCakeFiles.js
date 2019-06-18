@@ -11,6 +11,7 @@ import { CakeIndexFileBuilder } from './CakeIndexFileBuilder'
 
 import { getIndexFilePathAsyncIn } from './getIndexFilePathAsyncIn'
 
+// TODO if using this int he future, allow the index file memoize cache to be cleared
 const createTmpCakeDirFrom = async function(srcDir) {
     const tmpFolder = tmp.dirSync({unsafeCleanup: true})
 
