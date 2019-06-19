@@ -30,20 +30,20 @@
     },
     "dependencies": {
         "chalk": "^2.4.2",
-        "cheerio": "^1.0.0-rc.2",
-        "chokidar": "^2.1.2",
+        "cheerio": "^1.0.0-rc.3",
+        "chokidar": "^2.1.6",
         "common-tags": "^1.8.0",
         "electron-context-menu": "^0.11.0",
         "es6-template-strings": "^2.0.1",
-        "esm": "^3.2.4",
+        "esm": "^3.2.25",
         "execa": "^1.0.0",
         "expand-tilde": "^2.0.2",
-        "express": "^4.16.4",
+        "express": "^4.17.1",
         "get-port": "^4.1.0",
-        "gulp": "^4.0.0",
+        "gulp": "^4.0.2",
         "gulp-debug": "^4.0.0",
         "gulp-filter": "^5.1.0",
-        "js-beautify": "^1.9.0-beta5",
+        "js-beautify": "^1.10.0",
         "lodash": "^4.17.11",
         "memoizee": "^0.4.14",
         "once": "^1.4.0",
@@ -53,8 +53,8 @@
         "tmp": "0.0.33"
     },
     "devDependencies": {
-        "electron-builder": "^20.38.5",
-        "electron": "^4.0.5"
+        "electron": "^4.2.4",
+        "electron-builder": "^20.43.0"
     },
     "build": {
         "productName": "Cake",
