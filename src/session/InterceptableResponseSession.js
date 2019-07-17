@@ -2,7 +2,7 @@
     At the time, Electron sessions can handle a single `.webRequest.onHeadersReceived` listener,
     which makes complex response interception behaviors not composable.
 
-    This function enables responce interception composition by decorating a electron session 
+    This function enables response interception composition by decorating a electron session 
     with a `addResponseInterceptor` method, allowing multiple response handlers.
 */
 
