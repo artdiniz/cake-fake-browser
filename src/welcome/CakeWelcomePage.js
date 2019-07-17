@@ -22,25 +22,29 @@ const messages = {
     }
 }
 
-async function createCakeWelcomePage() {
+function createCakeWelcomePage() {
 
-    const welcomeWindow = await CakeWelcomeWindow()
+    const welcomeWindowPromise = CakeWelcomeWindow()
 
-    const getSrcFolder = () => {
+    const getSrcFolder = async () => {
+        const welcomeWindow = await welcomeWindowPromise
+
         welcomeWindow.show()
-        return new Promise((resolve, reject) => {            
+        return await new Promise((resolve, reject) => {            
             ipcMain.once('cakeFilesInput', (event, srcDir) => {
                 resolve(srcDir)
             })
         })
     }
 
-    const setLoaded = srcFolder => {
-        welcomeWindow.show()
+    const setLoaded = async (srcFolder) => {
+        const welcomeWindow = await welcomeWindowPromise
+        welcomeWindow.showInactive()
         welcomeWindow.webContents.send('cakeFilesSrcFolderLoaded', srcFolder)
     }
 
-    const setLoading = (srcFolder, message) => {
+    const setLoading = async (srcFolder, message) => {
+        const welcomeWindow = await welcomeWindowPromise
         welcomeWindow.show()
         welcomeWindow.webContents.send('cakeFilesSrcFolderLoading', srcFolder, message)
     }

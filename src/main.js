@@ -21,19 +21,24 @@ process.on('unhandledRejection', (error, rejectedPromise) => {
     process.exit(1)
 })
 
-const cakeApp = RestartableApp(app)
-
 const log = (message) => {
     printLogs(1, `${chalk.grey('[Initial setup]')} ${message}`, 1)
 }
 
-async function init ({args: cliArgs = process.argv.slice(2)}) {
+const cakeApp = RestartableApp(app)
 
-    cakeApp.onWillQuitBeforeCleanup(() => printLogs(1, '* Quit requested. *', 1))
-    cakeApp.onWillQuitAfterCleanup(() => printLogs(1, '* Quit cleanup succesfull! *', 1))
-    cakeApp.onWillQuitAfterCleanup(() => printLogs('Good Bye! 🎂'))
+cakeApp.onWillQuitBeforeCleanup(() => printLogs(1, '* Quit requested. *', 1))
+cakeApp.onWillQuitAfterCleanup(() => printLogs(1, '* Quit cleanup finished! *', 1))
+cakeApp.onWillQuitAfterCleanup(() => printLogs('Good Bye! 🎂'))
 
-    const cakeWelcomePage = await CakeWelcomePage()
+cakeApp.addCleanupTask(function cleanupIPCMainListeners() {
+    ipcMain.removeAllListeners()
+})
+
+cakeApp.start(initFunction)
+
+async function initFunction ({args: cliArgs = process.argv.slice(2)}) {
+    const cakeWelcomePage = CakeWelcomePage()
 
     cakeWelcomePage.onReloadRequested(newSrcFolder => {
         printLogs(1, '* Reload requested *', 1)
@@ -43,7 +48,7 @@ async function init ({args: cliArgs = process.argv.slice(2)}) {
                 printLogs(1, '* Reload successfull *', 1)
             })
     })
-
+    
     log('Waiting user input of src directory')
 
     const srcDir = await promptUserIfInvalidPath({
@@ -128,11 +133,6 @@ async function init ({args: cliArgs = process.argv.slice(2)}) {
         ])
     })
 
-    cakeApp.addCleanupTask(function cleanupIPCMainListeners() {
-        ipcMain.removeAllListeners()
-    })
-
     cakeWelcomePage.setLoaded(srcDir)
+    mainWindow.focus()
 }
-
-cakeApp.start(init)
