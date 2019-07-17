@@ -11,9 +11,9 @@ import { printLogs } from './printLogs'
         `restart` method will re-execute the function passed to `start` before, but will perform a cleanup before that.
 
     Also, the wrapped app creates 3 event abstractions around the electron `will-quit` event that can be listened calling:
-        • `onWillQuitBeforeCleanup` – adds functions to execute before quit cleanup
+        • `onWillQuitBeforeCleanup` – adds functions to execute before cleanup on either quit or restart
         • `addCleanupTask` –  adds cleanup tasks that must run anyway before quit and restart. By "run anyway" I mean it ignores errors thrown by the tasks.
-        • `onWillQuitAfterCleanup` – adds functions to execute after quit cleanup is finished. Note that app will surelly quit after those
+        • `onWillQuitAfterCleanup` – adds functions to execute after cleanup is finished. Note that app will surelly quit or restart after those
 */
 
 export const RestartableApp = (app) => {
@@ -28,11 +28,15 @@ export const RestartableApp = (app) => {
     const {start, restartFunction: _restartFunction} = (() => {
         let wasInitiated = false
         let initFunction = () => Promise.reject(`App wasn't initiated. No init function provided`)
+        
+        const permanentCleanupTasks = cleanupTasks
+        const permanentBeforeQuitCleanupHandlers = beforeQuitCleanupHandlers
+        const permanentAfterQuitCleanupHandlers = afterQuitCleanupHandlers
 
         const withInitialSetup = (fn) => (...args) => {
-            cleanupTasks = []
-            beforeQuitCleanupHandlers = []
-            afterQuitCleanupHandlers = []
+            cleanupTasks = permanentCleanupTasks.length ? [...permanentCleanupTasks] : []
+            beforeQuitCleanupHandlers = permanentBeforeQuitCleanupHandlers.length ? [...permanentBeforeQuitCleanupHandlers] : []
+            afterQuitCleanupHandlers = permanentAfterQuitCleanupHandlers.length ? [...permanentAfterQuitCleanupHandlers] : []
             
             app
                 .removeAllListeners()
