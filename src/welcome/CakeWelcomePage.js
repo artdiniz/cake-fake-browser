@@ -24,12 +24,10 @@ const messages = {
 
 function createCakeWelcomePage() {
 
-    const welcomeWindowPromise = CakeWelcomeWindow()
+    const welcomeWindow = CakeWelcomeWindow()
 
     const getSrcFolder = async () => {
-        const welcomeWindow = await welcomeWindowPromise
-
-        welcomeWindow.show()
+        await welcomeWindow.show()
         return await new Promise((resolve, reject) => {            
             ipcMain.once('cakeFilesInput', (event, srcDir) => {
                 resolve(srcDir)
@@ -37,16 +35,14 @@ function createCakeWelcomePage() {
         })
     }
 
-    const setLoaded = async (srcFolder) => {
-        const welcomeWindow = await welcomeWindowPromise
-        welcomeWindow.showInactive()
-        welcomeWindow.webContents.send('cakeFilesSrcFolderLoaded', srcFolder)
+    const showLoading = async (srcFolder, message) => {
+        await welcomeWindow.show()
+        welcomeWindow.webContents.send('cakeFilesSrcFolderLoading', srcFolder, message)
     }
 
-    const setLoading = async (srcFolder, message) => {
-        const welcomeWindow = await welcomeWindowPromise
-        welcomeWindow.show()
-        welcomeWindow.webContents.send('cakeFilesSrcFolderLoading', srcFolder, message)
+    const showLoaded = async (srcFolder) => {
+        await welcomeWindow.show()
+        welcomeWindow.webContents.send('cakeFilesSrcFolderLoaded', srcFolder)
     }
 
     const onReloadRequested = (callback) => {
@@ -57,8 +53,8 @@ function createCakeWelcomePage() {
 
     return {
         getSrcFolder
-        ,setLoaded: setLoaded
-        ,setLoading: setLoading
+        ,showLoaded: showLoaded
+        ,showLoading: showLoading
         ,onReloadRequested
         ,messages
     }

@@ -60,7 +60,7 @@ async function initFunction ({args: cliArgs = process.argv.slice(2)}) {
 
     const possibleIndexFileNames = ['index', 'main', 'cake', 'browser']
 
-    cakeWelcomePage.setLoading(
+    cakeWelcomePage.showLoading(
         srcDir
         ,cakeWelcomePage.messages.waitingForIndexFileCreation(possibleIndexFileNames)
     )
@@ -69,7 +69,7 @@ async function initFunction ({args: cliArgs = process.argv.slice(2)}) {
         fileNames: possibleIndexFileNames
     })
 
-    cakeWelcomePage.setLoading(
+    cakeWelcomePage.showLoading(
         srcDir
         ,cakeWelcomePage.messages.startingServer(indexFilePath)
     )
@@ -133,6 +133,6 @@ async function initFunction ({args: cliArgs = process.argv.slice(2)}) {
         ])
     })
 
-    cakeWelcomePage.setLoaded(srcDir)
-    mainWindow.focus()
+    await cakeWelcomePage.showLoaded(srcDir)
+    await mainWindow.show()
 }

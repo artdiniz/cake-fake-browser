@@ -1,8 +1,12 @@
 import { GenericBrowserWindow } from '../../window/GenericBrowserWindow'
+import { WithNoFOUCOnShowWindow } from '../../window/WithNoFOUCOnShowWindow'
+
 import { textHandlingContextMenuFor } from '../../menu/contextMenus'
 
 const createCakeWelcomeWindow = () => {    
-    let welcomeWindow = GenericBrowserWindow()
+    let welcomeWindow = WithNoFOUCOnShowWindow(
+        GenericBrowserWindow()
+    )
 
     textHandlingContextMenuFor(welcomeWindow)
 
@@ -14,9 +18,7 @@ const createCakeWelcomeWindow = () => {
         welcomeWindow = null
     })
 
-    return new Promise((resolve, reject) => {
-        welcomeWindow.once('ready-to-show', () => resolve(welcomeWindow))
-    })
+    return welcomeWindow
 }
 
 export const CakeWelcomeWindow = createCakeWelcomeWindow

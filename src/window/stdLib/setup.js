@@ -1,5 +1,5 @@
 import { setupPromptFor } from './prompt/setupPrompt'
 
-export const setupStdLibFor = function(windowPromise) {
-    setupPromptFor(windowPromise)
+export const setupStdLibFor = function(window) {
+    setupPromptFor(window)
 }

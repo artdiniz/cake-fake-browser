@@ -20,17 +20,12 @@ const promptHeightFor = (message) => {
     return baseHeight + messageHeight
 }
 
-const waitNext = () => new Promise(resolve => setTimeout(() => resolve(), 0))
-
-export const setupPromptFor =  windowPromise => {
+export const setupPromptFor =  window => {
     let promptResponse
     ipcMain.on('window.prompt', async (event, {message = "", defaultValue = ""}) => {
         promptResponse = null
 
-        await waitNext()
-        await waitNext()
-
-        const window = await windowPromise
+        await window.show()
         
         let promptWindow = GenericBrowserWindow({
             width: 440,
