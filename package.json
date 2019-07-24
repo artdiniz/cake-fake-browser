@@ -13,7 +13,7 @@
         "url": "https://github.com/artdiniz",
         "email": "artur.adam@caelum.com.br"
     },
-    "version": "0.0.23-dev",
+    "version": "0.0.23-dev-a",
     "publishConfig": {
         "access": "public"
     },
@@ -31,7 +31,7 @@
     "dependencies": {
         "chalk": "^2.4.2",
         "cheerio": "^1.0.0-rc.3",
-        "chokidar": "^2.1.6",
+        "chokidar": "^3.0.2",
         "common-tags": "^1.8.0",
         "electron-context-menu": "^0.11.0",
         "es6-template-strings": "^2.0.1",
