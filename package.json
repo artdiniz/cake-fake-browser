@@ -43,18 +43,18 @@
         "gulp": "^4.0.2",
         "gulp-debug": "^4.0.0",
         "gulp-filter": "^5.1.0",
-        "js-beautify": "^1.10.0",
-        "lodash": "^4.17.11",
+        "js-beautify": "^1.10.1",
+        "lodash": "^4.17.15",
         "memoizee": "^0.4.14",
         "once": "^1.4.0",
         "read-pkg-up": "^4.0.0",
-        "run-electron": "github:artdiniz/run-electron#useExeca",
+        "run-electron": "^1.0.0",
         "stoppable": "^1.1.0",
         "tmp": "0.0.33"
     },
     "devDependencies": {
-        "electron": "^4.2.4",
-        "electron-builder": "^20.43.0"
+        "electron": "^4.2.8",
+        "electron-builder": "^20.44.4"
     },
     "build": {
         "productName": "Cake",
