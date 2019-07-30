@@ -11,7 +11,7 @@ const createCakeWelcomeWindow = () => {
     textHandlingContextMenuFor(welcomeWindow)
 
     const cakePagePath = require.resolve('./page/index.html')
-    welcomeWindow.loadURL('file://' + cakePagePath)
+    welcomeWindow.loadURL('file://' + cakePagePath)
 
     welcomeWindow.on('closed', () => {
         welcomeWindow.removeAllListeners()
