@@ -33,8 +33,8 @@ const getIndexContent = memoize((indexFilePath, iframeSRC) => {
 
 const setFileSystemWatcher = function(globPath, callback) {
     let chokidarWatcher = chokidar.watch(globPath, {
-        ignoreInitial: true
-        ,awaitWriteFinish: false
+        ignoreInitial: true,
+        usePolling: process.platform === 'linux'
     })
 
     chokidarWatcher.on('all', callback)
@@ -54,7 +54,6 @@ const setFileSystemWatcher = function(globPath, callback) {
 }
 
 export const setupCakeFilesServer = async ({in: srcDir, indexFilePath}) => {
-    
     const indexFileWatcher = setFileSystemWatcher(indexFilePath, (eventName) => {
         printLogs(`${chalk.grey('[Cake files]')} Update ${chalk.green(eventName)}: ${chalk.cyan(chalk.underline(indexFilePath))}`, 2)
         getIndexContent.clear()
