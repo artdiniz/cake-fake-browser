@@ -12,7 +12,7 @@ export const getIndexFilePathAsyncIn = function (folderPath, {fileNames = []} = 
     
     if(indexWatcher !== null) indexWatcher.close()
     
-    indexWatcher = chokidar.watch(`+(${fileNamesWithExtension.join('|')})`, {
+    indexWatcher = chokidar.watch(fileNamesWithExtension, {
         ignoreInitial: false,
         cwd: folderPath,
         awaitWriteFinish: false
