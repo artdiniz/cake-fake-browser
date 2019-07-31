@@ -12,7 +12,8 @@ function createGenericBrowserWindow (opts = {}) {
             width: screenSize.width
             ,height: screenSize.height
             ,webPreferences: {
-                webSecurity: false
+                webSecurity: false,
+                nodeIntegration: true
             }
             ,sandbox: true
             ,show: false
