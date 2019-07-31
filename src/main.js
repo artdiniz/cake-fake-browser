@@ -9,6 +9,7 @@ import { InterceptableResponseSession } from './session/InterceptableResponseSes
 import { AmnesicSession } from './session/AmnesicSession'
 
 import { RestartableApp } from './util/RestartableApp'
+import { WithTemporaryFixForChromiumBug } from './util/WithTemporaryFixForChromiumBug'
 import { printLogs } from './util/printLogs'
 import { CakeWelcomePage } from './welcome/CakeWelcomePage'
 import { promptUserIfInvalidPath, setupCakeFilesServer, getIndexFilePathAsyncIn } from './cakeBrowserInputFiles'
@@ -25,7 +26,10 @@ const log = (message) => {
     printLogs(1, `${chalk.grey('[Initial setup]')} ${message}`, 1)
 }
 
-const cakeApp = RestartableApp(app)
+const cakeApp = RestartableApp(
+                WithTemporaryFixForChromiumBug(
+                    app
+                ))
 
 cakeApp.onWillQuitBeforeCleanup(() => printLogs(1, '* Quit requested. *', 1))
 cakeApp.onWillQuitAfterCleanup(() => printLogs(1, '* Quit cleanup finished! *', 1))
