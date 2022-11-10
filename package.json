@@ -53,7 +53,7 @@
         "tmp": "0.0.33"
     },
     "devDependencies": {
-        "electron": "^4.2.8",
+        "electron": "^18.3.7",
         "electron-builder": "^20.44.4"
     },
     "build": {
